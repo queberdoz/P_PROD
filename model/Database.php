@@ -81,6 +81,34 @@ class Database extends Model
     }
 
     /**
+     * Read a table and return the day the user reserve
+     * @param string $tableName
+     * @return array
+     */
+    function readReservationUserDate(string $user, string $day){
+        $results = $this->querySimpleExecute("SELECT * FROM t_reservation INNER JOIN t_user ON t_reservation.fkUser = t_user.idUser INNER JOIN t_meal ON t_reservation.fkMeal = t_meal.idMeal WHERE useUsername='$user' AND resDate='$day'");
+        
+        //Debug
+        //echo("SELECT * FROM t_reservation INNER JOIN t_user ON t_reservation.fkUser = t_user.idUser INNER JOIN t_meal ON t_reservation.fkMeal = t_meal.idMeal WHERE useUsername='$user' AND resDate='$day'");
+        $results = $this->formatData($results);
+        return $results;
+    }
+
+    /**
+     * Lit la table et envoie tout les plats commande pour aujourd'hui et les jours qui suivent, les jours préscédent ne sont pas afficher.
+     * @param string $tableName
+     * @return array
+     */
+    function readReservationUser(string $user){
+        $results = $this->querySimpleExecute("SELECT * FROM t_reservation INNER JOIN t_user ON t_reservation.fkUser = t_user.idUser INNER JOIN t_meal ON t_reservation.fkMeal = t_meal.idMeal WHERE useUsername='$user' AND resDate >= CURDATE() ORDER BY resDate ASC");
+        
+        //Debug
+        //echo("SELECT * FROM t_reservation INNER JOIN t_user ON t_reservation.fkUser = t_user.idUser INNER JOIN t_meal ON t_reservation.fkMeal = t_meal.idMeal WHERE useUsername='$user' AND resDate >= CURDATE() ORDER BY resDate ASC");
+        $results = $this->formatData($results);
+        return $results;
+    }
+
+    /**
      * Returns the id of the user with the corresponding username
      * @param $username string
      * @return mixed
@@ -194,6 +222,15 @@ class Database extends Model
         $this->querySimpleExecute('delete from t_user where useUsername = ' . $username);
     }
 
+    /**
+     * Deletes the order with the id order
+     * @param $idorder int
+     */
+    function deleteOrder($idorder)
+    {
+        $this->querySimpleExecute('delete from t_reservation where idReservation = ' . $idorder);
+    }
+
 #region ExistsAt functions
 
     /**
@@ -295,7 +332,7 @@ class Database extends Model
         $subject = 'Réservation de ' . $user;
         $body = $user . ' a réservé un menu végétarien pour le ' . $date . /*$table . ' ' . $meal*/ ' à ' . $hour . 'h.';
 
-        $this->sendMail($subject, $body);
+        //$this->sendMail($subject, $body);
 
         return $this->addData('t_reservation', ['resDate', 'resTable', 'resHour', 'fkMeal', 'fkUser'], [$date, $table, $hour, $mealId, $userId]);
     }

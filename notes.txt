@@ -1,4 +1,4 @@
-﻿20201214
+﻿2020 12 14
 exposer paramètres pour admin
 manger sur place/emporter comme critère à ajouter
 fini rentrée septembre 2021, tests en printemps 2021
@@ -6,7 +6,15 @@ identifier personne via carte étudiant/eduvaud
 envoyer email/jour pour lendemain/surlendemain
 mettre image pour plats via vue admin
 
-20210106
+2021 01 06
 pas de vérification de compte
 vue admin faire calendrier plus joli
 changer de semaine en mode admin
+
+--Quentin Berdoz reprend le projet
+
+Ce qui a été ajouté
+
+2021 01 25
+BD : unqiue sur username et email
+Ajout d'un nombre limite de commande par jour

@@ -8,6 +8,11 @@
 
 class HomeController extends Controller
 {
+    //// Definition des variables ////
+
+    //define("MAXPEPOLEPERTABLE")
+
+
 
     /**
      * Dispatch current action
@@ -386,12 +391,43 @@ class HomeController extends Controller
     }
 
     /**
+     * Verifie si la commande a supprimer est bien celle du l'utilisateur
+     * 
+     * 
+     */
+    private function VerifieDeleteOrder($id){
+        //$_SESSION['username'];
+        include_once 'model/Database.php';
+        $database = new Database();
+
+        //Recherche dans BD de toutes ces commandes
+        $result=$database->readReservationUser($_SESSION['username']);
+
+        $okDelete = false;
+
+        //Comparaisons des résultats
+        for($x=0 ; $x < count($result) ; $x++){
+            if($id == $result[$x]['idReservation']){
+                $okDelete = true;
+            }
+        }
+
+        if($okDelete){
+            $database->deleteOrder($id);
+        }
+    }
+
+    /**
      * Display Command Action
      *
      * @return string
      */
     private function CommanderAction()
     {
+
+        $maxorderperday=1;
+        $maxpepolepertable=1;
+
         include_once 'model/Database.php';
         $database = new Database();
 
@@ -439,15 +475,29 @@ class HomeController extends Controller
                     $commandErrors[] = "Veuillez entrer un plat valide.";
                 }
 
+                //Regarde si l'utilisateur n'a pas déjà une réservation à cette date
+                $result=$database->readReservationUserDate($_SESSION['username'], $_POST[$sResDate]);
+
+                //Debug
+                /*echo($_POST[$sResDate]);
+                echo(" -result ");
+                echo(count($result));*/
+                if(count($result) == $maxorderperday){
+                    $commandErrors[] = "Vous avez déjà réserver " . $maxorderperday . " fois pour cette date";
+                }
+
+                //$result=$database->
+
                 if (count($commandErrors) == 0) {
                     $date = $_POST[$sResDate];
                     //$table = $_POST[$sResTable];
                     $hour = $_POST[$sResHour];
-
-                    //that condition is for checking wether the reservation exists already, only one reservation per date/table and hour
+                    
+                    //that condition is for checking wether the reservation exists already, only one reservation per date/table and hour - only one reservation per personne/day
+                    
                     //TODO rework it to handle limit of 4 people per table
                     //if ($database->reservationExistsAt($date, $table, $hour) < 0) {
-                    $database->addReservation($date, 0 /*$table*/, $hour, $_POST[$sResMeal], $database->getIdUser($_SESSION['username']));
+                    $database->addReservation($date, 0 /*, $table*/, $hour, $_POST[$sResMeal], $database->getIdUser($_SESSION['username']));
                     //echo 'Réservation ajoutée !<br>';
                     $_SESSION['CommandDone'] = true;
                     $_SESSION['CommandTemp'] = $_POST;
