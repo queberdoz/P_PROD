@@ -41,33 +41,33 @@ Les parties du code concernant le choix de tables ou d'autres plats lors d'une c
 10. Retournez sur la base de données mysql, se rendre dans t_user et modifiez un user existant avec droits supérieurs à 50, pour qu'il soit administrateur.
 
 ## Lexique:
-:white_check_mark: Fait !
-:large_blue_circle: en cours
-:large_orange_diamond: à faire (prioriter)
-:white_circle: à en parler
+- :white_check_mark: Fait !
+- :large_blue_circle: en cours
+- :large_orange_diamond: à faire (prioriter)
+- :white_circle: à en parler
 
-:x: annuler, car soit inutile ou non-nécessaire
+- :x: annuler, car soit inutile ou non-nécessaire
 
 ## TODO
 Bugs connus :
 - des utilisateurs peuvent commander un plat puis le plat peut être changé sans qu'ils ne le sachent. de plus la vue admin récapitulatif ne comptera que le plat actuel. Plusieurs solutions :
-  :large_blue_circle: t_meal : ajouter champ deadline, à compléter en vue admin lors de changements de plats, n'accepter commande pour le plat donné que si dans la deadline
-  :x: non, car add champ dans t_meal -- vue admin : lorsque changements de menus, prévenir si réservation dans le futur avec ces plats avant d'effectuer le changement
-  ??? vue admin : lister tous les types de plats dans récapitulatif
+  - :large_blue_circle: t_meal : ajouter champ deadline, à compléter en vue admin lors de changements de plats, n'accepter commande pour le plat donné que si dans la deadline
+  - :x: non, car add champ dans t_meal -- vue admin : lorsque changements de menus, prévenir si réservation dans le futur avec ces plats avant d'effectuer le changement
+  - ??? vue admin : lister tous les types de plats dans récapitulatif
                 
 
-  :white_circle: vue utilisateur : restreindre commande à semaine courante (voir 2 semaines, peux être mieux et plus facile à implémenter)
-  :white_check_mark: un seul menu par jour - les utilisateurs peuvent commander plusieurs menu
+  - :white_circle: vue utilisateur : restreindre commande à semaine courante (voir 2 semaines, peux être mieux et plus facile à implémenter)
+  - :white_check_mark: un seul menu par jour - les utilisateurs peuvent commander plusieurs menu
 
 Fonctionnalités légères :
-:white_circle: vue user : x utilisateur ne peuvent pas réserver la même table durant la même période
+- :white_circle: vue user : x utilisateur ne peuvent pas réserver la même table durant la même période
 - vue admin : ajouter options pour promouvoir utilisateur en tant qu'admin
-:white_circle: vue admin : ajouter changement de semaines pour le tableau (flèches gauche/droite)
-:white_check_mark: vue user : voir l'ensemble de commandes passées + en annuler (pas dispo le matin même)
+- :white_circle: vue admin : ajouter changement de semaines pour le tableau (flèches gauche/droite)
+- :white_check_mark: vue user : voir l'ensemble de commandes passées + en annuler (pas dispo le matin même)
 - vue user : ajouter options de gestion de compte (suppression, reset mdp, etc)
 - vue user : empêcher sélection de dates lors de vacances/fériés scolaires
 - t_reservation : ajouter champ "créé le [date]"
-:white_circle: t_reservation : ajouter champ "manger sur place/à l'emporter"
+- :white_circle: t_reservation : ajouter champ "manger sur place/à l'emporter"
 - serveur : créer nouvelle adresse mail (sans "test" dans son nom)
 - serveur : Mettre plus d'error_log pour mieux suivre erreurs serveur
 
