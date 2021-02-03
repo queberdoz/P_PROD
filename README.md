@@ -53,7 +53,7 @@ Bugs connus :
 - des utilisateurs peuvent commander un plat puis le plat peut être changé sans qu'ils ne le sachent. de plus la vue admin récapitulatif ne comptera que le plat actuel. Plusieurs solutions :
   - :large_blue_circle: t_meal : ajouter champ deadline, à compléter en vue admin lors de changements de plats, n'accepter commande pour le plat donné que si dans la deadline
   - :x: non, car add champ dans t_meal -- vue admin : lorsque changements de menus, prévenir si réservation dans le futur avec ces plats avant d'effectuer le changement
-  - ??? vue admin : lister tous les types de plats dans récapitulatif
+  - ? :white_circle: ? vue admin : lister tous les types de plats dans récapitulatif
                 
 
   - :white_circle: vue utilisateur : restreindre commande à semaine courante (voir 2 semaines, peux être mieux et plus facile à implémenter)
@@ -84,5 +84,6 @@ Fonctionnalités Optionel :
 - Commande : Pour la commande d'un plat, faire en sorte que "Choisir" ne soit pas sélectionnable
 - Inscription : Pour l'inscription mettre la case en rouge si elle est fausse
 - Inscription : Griser le bouton "Inscritption" si tout les champs ne sont pas au vert
+- Connexion avec le login d'Eduvaud (Office 365) quelque recherche --> [lien](https://docs.microsoft.com/en-us/previous-versions/azure/dn646737(v=azure.100)?redirectedfrom=MSDN)
 
 
