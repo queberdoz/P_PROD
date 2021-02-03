@@ -75,7 +75,7 @@ Fonctionnalités complexes :
 - vue admin : générer récapitulatif détaillé pdf puis l'envoyer par mail aux responsables via un bouton
 - vue admin/user : ajouter image pour plats
 - serveur : envoyer un email/jour récapitulatif (à minuit) pour les commandes du lendemain/surlendemain
-- sécurité : identifier personne via carte étudiant/eduvaud (déterminer manière de vérifier)
+- sécurité : identifier personne via carte étudiant/~~eduvaud~~ (déterminer manière de vérifier)
 - sécurité : vérifier le compte via email
 
 Fonctionnalités Optionel :
