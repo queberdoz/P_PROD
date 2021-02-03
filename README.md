@@ -61,12 +61,12 @@ Bugs connus :
 
 Fonctionnalités légères :
 - :white_circle: vue user : x utilisateur ne peuvent pas réserver la même table durant la même période
-- vue admin : ajouter options pour promouvoir utilisateur en tant qu'admin
+- :large_orange_diamond: vue admin : ajouter options pour promouvoir utilisateur en tant qu'admin
 - :white_circle: vue admin : ajouter changement de semaines pour le tableau (flèches gauche/droite)
 - :white_check_mark: vue user : voir l'ensemble de commandes passées + en annuler (pas dispo le matin même)
-- vue user : ajouter options de gestion de compte (suppression, reset mdp, etc)
-- vue user : empêcher sélection de dates lors de vacances/fériés scolaires
-- t_reservation : ajouter champ "créé le [date]"
+- :large_orange_diamond: vue user : ajouter options de gestion de compte (suppression, reset mdp, etc)
+- :large_orange_diamond: vue user : empêcher sélection de dates lors de vacances/fériés scolaires
+- :white_circle: t_reservation : ajouter champ "créé le [date]"
 - :white_circle: t_reservation : ajouter champ "manger sur place/à l'emporter"
 - serveur : créer nouvelle adresse mail (sans "test" dans son nom)
 - serveur : Mettre plus d'error_log pour mieux suivre erreurs serveur
