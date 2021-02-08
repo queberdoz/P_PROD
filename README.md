@@ -43,9 +43,9 @@ Les parties du code concernant le choix de tables ou d'autres plats lors d'une c
 ## Lexique:
 - :white_check_mark: Fait !
 - :large_blue_circle: en cours
-- :large_orange_diamond: à faire (prioriter)
+- :large_orange_diamond: à faire (prioriter haute)
+- (vide) à faire (prioriter basse)
 - :white_circle: à en parler
-
 - :x: annuler, car soit inutile, non-nécessaire ou infaisable
 
 ## TODO
@@ -74,7 +74,7 @@ Fonctionnalités légères :
 Fonctionnalités complexes :
 - vue admin : générer récapitulatif détaillé pdf puis l'envoyer par mail aux responsables via un bouton.
 - vue admin/user : ajouter image pour plats.
-- :x: serveur : envoyer un email/jour récapitulatif (à minuit) pour les commandes du lendemain/surlendemain -- utilisation de script impossible sur un héberger web, à voir lors de l'hébergement.
+- serveur : envoyer un email/jour récapitulatif (à minuit) pour les commandes du lendemain/surlendemain -- utilisation de script impossible sur un héberger web, à voir lors de l'hébergement.
 - :x: sécurité : identifier personne via carte étudiant/~~eduvaud~~ (déterminer manière de vérifier) -- Trop compliquer, l'id trouvé sur la carte est propre à la carte et non à l'étudiant et la syncronisation avec un fichier sur sharepoint demande un accès spécial qui demanderai d'être sécuriser.
 - sécurité : vérifier le compte via email.
 
