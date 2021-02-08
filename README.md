@@ -46,44 +46,42 @@ Les parties du code concernant le choix de tables ou d'autres plats lors d'une c
 - :large_orange_diamond: à faire (prioriter)
 - :white_circle: à en parler
 
-- :x: annuler, car soit inutile ou non-nécessaire
+- :x: annuler, car soit inutile, non-nécessaire ou infaisable
 
 ## TODO
 Bugs connus :
 - des utilisateurs peuvent commander un plat puis le plat peut être changé sans qu'ils ne le sachent. de plus la vue admin récapitulatif ne comptera que le plat actuel. Plusieurs solutions :
-  - :large_blue_circle: t_meal : ajouter champ deadline, à compléter en vue admin lors de changements de plats, n'accepter commande pour le plat donné que si dans la deadline
-  - :x: non, car add champ dans t_meal -- vue admin : lorsque changements de menus, prévenir si réservation dans le futur avec ces plats avant d'effectuer le changement
-  - ? :white_circle: ? vue admin : lister tous les types de plats dans récapitulatif
+  - :large_blue_circle: t_meal : ajouter champ deadline, à compléter en vue admin lors de changements de plats, n'accepter commande pour le plat donné que si dans la deadline.
+  - :x: non, car add champ dans t_meal -- vue admin : lorsque changements de menus, prévenir si réservation dans le futur avec ces plats avant d'effectuer le changement.
+  - ? :white_circle: ? vue admin : lister tous les types de plats dans récapitulatif.
                 
 
-  - :white_circle: vue utilisateur : restreindre commande à semaine courante (voir 2 semaines, peux être mieux et plus facile à implémenter)
-  - :white_check_mark: un seul menu par jour - les utilisateurs peuvent commander plusieurs menu
+  - :white_circle: vue utilisateur : restreindre commande à semaine courante (voir 2 semaines, peux être mieux et plus facile à implémenter).
+  - :white_check_mark: un seul menu par jour - les utilisateurs peuvent commander plusieurs menu.
 
 Fonctionnalités légères :
-- :white_circle: vue user : x utilisateur ne peuvent pas réserver la même table durant la même période
-- :large_orange_diamond: vue admin : ajouter options pour promouvoir utilisateur en tant qu'admin
-- :white_circle: vue admin : ajouter changement de semaines pour le tableau (flèches gauche/droite)
-- :white_check_mark: vue user : voir l'ensemble de commandes passées + en annuler (pas dispo le matin même)
-- :large_orange_diamond: vue user : ajouter options de gestion de compte (suppression, reset mdp, etc)
-- :large_orange_diamond: vue user : empêcher sélection de dates lors de vacances/fériés scolaires
-- :white_circle: t_reservation : ajouter champ "créé le [date]"
-- :white_circle: t_reservation : ajouter champ "manger sur place/à l'emporter"
-- serveur : créer nouvelle adresse mail (sans "test" dans son nom)
-- serveur : Mettre plus d'error_log pour mieux suivre erreurs serveur
+- :x: vue user : x utilisateur ne peuvent pas réserver la même table durant la même période -- annuler car, utilse déjà une feuille pour l'attribution et le suivit à cause du Covid.
+- :large_orange_diamond: vue admin : ajouter options pour promouvoir utilisateur en tant qu'admin.
+- :large_orange_diamond: vue admin : ajouter changement de semaines pour le tableau (flèches gauche/droite).
+- :white_check_mark: vue user : voir l'ensemble de commandes passées + en annuler (pas dispo le matin même).
+- :large_orange_diamond: vue user : ajouter options de gestion de compte (suppression, reset mdp, etc).
+- :large_orange_diamond: vue user : empêcher sélection de dates lors de vacances/fériés scolaires.
+- :x: t_reservation : ajouter champ "créé le [date]" -- plus besoin car les plats auront un date de début et de fin. Le but du champs "créé le" était de pouvoir supprimer le plat si celui-ci venait a changé avant la réservation.
+- :x: t_reservation : ajouter champ "manger sur place/à l'emporter" -- Rien n'est encore prévu.
+- serveur : créer nouvelle adresse mail (sans "test" dans son nom).
+- serveur : Mettre plus d'error_log pour mieux suivre erreurs serveur.
 
 Fonctionnalités complexes :
-- vue admin : générer récapitulatif détaillé pdf puis l'envoyer par mail aux responsables via un bouton
-- vue admin/user : ajouter image pour plats
-- serveur : envoyer un email/jour récapitulatif (à minuit) pour les commandes du lendemain/surlendemain
-- sécurité : identifier personne via carte étudiant/~~eduvaud~~ (déterminer manière de vérifier)
-- sécurité : vérifier le compte via email
+- vue admin : générer récapitulatif détaillé pdf puis l'envoyer par mail aux responsables via un bouton.
+- vue admin/user : ajouter image pour plats.
+- :x: serveur : envoyer un email/jour récapitulatif (à minuit) pour les commandes du lendemain/surlendemain -- utilisation de script impossible sur un héberger web, à voir lors de l'hébergement.
+- :x: sécurité : identifier personne via carte étudiant/~~eduvaud~~ (déterminer manière de vérifier) -- Trop compliquer, l'id trouvé sur la carte est propre à la carte et non à l'étudiant et la syncronisation avec un fichier sur sharepoint demande un accès spécial qui demanderai d'être sécuriser.
+- sécurité : vérifier le compte via email.
 
 Fonctionnalités Optionel :
 - Pouvoir modifier sa commande au lieux de supprimer et d'en refaire une.
-- vue admin : rendre tableau mieux responsive (pour petites devices)
-- Commande : Pour la commande d'un plat, faire en sorte que "Choisir" ne soit pas sélectionnable
-- Inscription : Pour l'inscription mettre la case en rouge si elle est fausse
-- Inscription : Griser le bouton "Inscritption" si tout les champs ne sont pas au vert
-- Connexion avec le login d'Eduvaud (Office 365) quelque recherche --> [lien](https://docs.microsoft.com/en-us/previous-versions/azure/dn646737(v=azure.100)?redirectedfrom=MSDN)
-
-
+- vue admin : rendre tableau mieux responsive (pour petites devices).
+- Commande : Pour la commande d'un plat, faire en sorte que "Choisir" ne soit pas sélectionnable.
+- Inscription : Pour l'inscription mettre la case en rouge si elle est fausse.
+- Inscription : Griser le bouton "Inscritption" si tout les champs ne sont pas au vert.
+- :x: Connexion avec le login d'Eduvaud (Office 365) quelque recherche --> [lien](https://docs.microsoft.com/en-us/previous-versions/azure/dn646737(v=azure.100)?redirectedfrom=MSDN) -- Demanderai des droits spéciaux pour rechercher dans la DB, cela prendrai trop de temps et voir pas autorisé.
