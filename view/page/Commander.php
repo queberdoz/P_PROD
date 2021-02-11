@@ -43,11 +43,6 @@ if (!array_key_exists('username', $_SESSION)) {
             <label>Date de la réservation : </label>
             <input class="form-control" type="date" name="resDate" value="<?php if (isset($_POST['resDate'])) { echo $_POST['resDate']; } else { echo date('Y-m-d', strtotime("+1 days")); } ?>">
         </div>
-            
-            <!--<p>
-            <label>Numéro de table</label>
-            <input type="number" name="resTable" min="1" max="18" value="1">
-            </p>-->
             <div class="form-group">
             <label>Heure de la réservation</label>
             <select class="form-control" name="resHour">

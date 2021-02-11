@@ -60,7 +60,7 @@ Bugs connus :
   - :white_check_mark: un seul menu par jour - les utilisateurs peuvent commander plusieurs menu.
 
 Fonctionnalités légères :
-- :x: vue user : x utilisateur ne peuvent pas réserver la même table durant la même période -- annuler car, utilse déjà une feuille pour l'attribution et le suivit à cause du Covid.
+- :x: vue user : x utilisateur ne peuvent pas réserver la même table durant la même période -- annuler car, utilise déjà une feuille pour l'attribution et le suivit à cause du Covid.
 - :large_orange_diamond: vue admin : ajouter options pour promouvoir utilisateur en tant qu'admin.
 - :large_orange_diamond: vue admin : ajouter changement de semaines pour le tableau (flèches gauche/droite).
 - :white_check_mark: vue user : voir l'ensemble de commandes passées + en annuler (pas dispo le matin même).
@@ -75,7 +75,7 @@ Fonctionnalités complexes :
 - vue admin : générer récapitulatif détaillé pdf puis l'envoyer par mail aux responsables via un bouton.
 - vue admin/user : ajouter image pour plats.
 - serveur : envoyer un email/jour récapitulatif (à minuit) pour les commandes du lendemain/surlendemain -- utilisation de script impossible sur un héberger web, à voir lors de l'hébergement.
-- :x: sécurité : identifier personne via carte étudiant/~~eduvaud~~ (déterminer manière de vérifier) -- Trop compliquer, l'id trouvé sur la carte est propre à la carte et non à l'étudiant et la syncronisation avec un fichier sur sharepoint demande un accès spécial qui demanderai d'être sécuriser.
+- :x: sécurité : identifier personne via carte étudiant/~~eduvaud~~ (déterminer manière de vérifier) -- Trop compliquer, l'id trouvé sur la carte est propre à la carte et non à l'étudiant et la synchronisation avec un fichier sur sharepoint demande un accès spécial qui demanderai d'être sécuriser.
 - sécurité : vérifier le compte via email.
 
 Fonctionnalités Optionel :

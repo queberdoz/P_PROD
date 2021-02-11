@@ -68,14 +68,14 @@ class Database extends Model
      */
     function readTable(string $tableName): array
     {
-        $results = $this->querySimpleExecute('select * from ' . $tableName);
+        $results = $this->querySimpleExecute('SELECT * from ' . $tableName);
         $results = $this->formatData($results);
         return $results;
     }
 
     function readReservationPerDay(string $day)
     {
-        $results = $this->querySimpleExecute("select * from t_reservation where resDate between '$day 00:00:00' and '$day 23:59:59' order by resHour ASC, resTable ASC, fkMeal ASC");
+        $results = $this->querySimpleExecute("SELECT * from t_reservation where resDate between '$day 00:00:00' and '$day 23:59:59' order by resHour ASC, resTable ASC, fkMeal ASC");
         $results = $this->formatData($results);
         return $results;
     }
@@ -88,8 +88,6 @@ class Database extends Model
     function readReservationUserDate(string $user, string $day){
         $results = $this->querySimpleExecute("SELECT * FROM t_reservation INNER JOIN t_user ON t_reservation.fkUser = t_user.idUser INNER JOIN t_meal ON t_reservation.fkMeal = t_meal.idMeal WHERE useUsername='$user' AND resDate='$day'");
         
-        //Debug
-        //echo("SELECT * FROM t_reservation INNER JOIN t_user ON t_reservation.fkUser = t_user.idUser INNER JOIN t_meal ON t_reservation.fkMeal = t_meal.idMeal WHERE useUsername='$user' AND resDate='$day'");
         $results = $this->formatData($results);
         return $results;
     }
@@ -102,8 +100,6 @@ class Database extends Model
     function readReservationUser(string $user){
         $results = $this->querySimpleExecute("SELECT * FROM t_reservation INNER JOIN t_user ON t_reservation.fkUser = t_user.idUser INNER JOIN t_meal ON t_reservation.fkMeal = t_meal.idMeal WHERE useUsername='$user' AND resDate >= CURDATE() ORDER BY resDate ASC");
         
-        //Debug
-        //echo("SELECT * FROM t_reservation INNER JOIN t_user ON t_reservation.fkUser = t_user.idUser INNER JOIN t_meal ON t_reservation.fkMeal = t_meal.idMeal WHERE useUsername='$user' AND resDate >= CURDATE() ORDER BY resDate ASC");
         $results = $this->formatData($results);
         return $results;
     }
@@ -115,22 +111,29 @@ class Database extends Model
      */
     function getIdUser($username)
     {
-        $results = $this->querySimpleExecute("select * from t_user where useUsername='". $username . "'");
+        $results = $this->querySimpleExecute("SELECT * from t_user where useUsername='". $username . "'");
         return $results = $this->formatData($results)[0]['idUser'];
     }
 
     function getCurrentMeals() {
-        $results = $this->querySimpleExecute("select * from t_meal where meaIsCurrentMeal limit 2");
+        $results = $this->querySimpleExecute("SELECT * from t_meal where meaIsCurrentMeal");
         return $results = $this->formatData($results);
     }
 
     function getAllMeals() {
-        $results = $this->querySimpleExecute("select * from t_meal");
+        $results = $this->querySimpleExecute("SELECT * from t_meal");
         return $results = $this->formatData($results);
     }
 
+    function getAllMealsDisplayed() {
+        $results = $this->querySimpleExecute("SELECT * from t_meal WHERE meaDisplay = '1'");
+        return $results = $this->formatData($results);
+    }
+
+    // 
+
     function getMeal($mealId) {
-        $results = $this->querySimpleExecute("select * from t_meal where idMeal=$mealId");
+        $results = $this->querySimpleExecute("SELECT * from t_meal where idMeal=$mealId");
         $results = $this->formatData($results);
         return count($results) == 1 ? $results[0] : -1;
     }
@@ -163,14 +166,73 @@ class Database extends Model
      * 
      * @return void
      */
-    public function addMeal($mealName) {
+    // $_POST['mealName-'. $z], $_POST['mealCurrentMeal-'. $z], $_POST['mealStartDate-'. $z], $_POST['mealDeadline-'. $z]
+
+
+    public function addNewMeal() {
         $this->queryPrepareExecute(
-            "INSERT INTO t_meal (meaName) VALUES (:varMeaName)",
+            "INSERT INTO t_meal (meaName, meaStartDate, meaDeadline) VALUES (:varNull, :stringDateStart, :stringDateDeadline)",
             array(
-                array(
+                1=> array(
+                    "marker" => "varNull",
+                    "var" => null,
+                    "type" => PDO::PARAM_INT
+                ),
+                2=> array(
+                    "marker" => "stringDateStart",
+                    "var" => date("Y-m-d"),
+                    "type" => PDO::PARAM_STR
+                ),
+                3=> array(
+                    "marker" => "stringDateDeadline",
+                    "var" => date("Y-m-d"),
+                    "type" => PDO::PARAM_STR
+                )
+            )
+        );
+    }
+
+    public function updateMeal($mealId, $mealName, $mealCurrentMeal, $mealStartDate, $mealDeadline) {
+        $this->queryPrepareExecute(
+            "UPDATE t_meal SET meaName = :varMeaName, meaIsCurrentMeal = :varMealCurrentMeal, meaStartDate = :varMealStartDate, meaDeadline = :varMealDeadline WHERE t_meal.idMeal = :intMealId",
+            array(
+                1=> array(
                     "marker" => "varMeaName",
                     "var" => $mealName,
                     "type" => PDO::PARAM_STR
+                ),
+                2=> array(
+                    "marker" => "varMealCurrentMeal",
+                    "var" => $mealCurrentMeal,
+                    "type" => PDO::PARAM_INT
+                ),
+                3=> array(
+                    "marker" => "varMealStartDate",
+                    "var" => $mealStartDate,
+                    "type" => PDO::PARAM_STR
+                ),
+                4=> array(
+                    "marker" => "varMealDeadline",
+                    "var" => $mealDeadline,
+                    "type" => PDO::PARAM_STR
+                ),
+                5=> array(
+                    "marker" => "intMealId",
+                    "var" => $mealId,
+                    "type" => PDO::PARAM_INT
+                ),
+            )
+        );
+    }
+
+    public function reactivateMeal($idMeal){
+        $this->queryPrepareExecute(
+            "UPDATE t_meal SET meaDisplay = 1 WHERE t_meal.idMeal = :intMealId",
+            array(
+                array(
+                    "marker" => "intMealId",
+                    "var" => $idMeal,
+                    "type" => PDO::PARAM_INT
                 )
             )
         );
@@ -209,7 +271,7 @@ class Database extends Model
      * @return mixed
      */
     function getUser($userId) {
-        $results = $this->querySimpleExecute("select * from t_user where idUser=$userId");
+        $results = $this->querySimpleExecute("SELECT * from t_user where idUser=$userId");
         return $results = $this->formatData($results)[0];
     }
 
@@ -295,7 +357,7 @@ class Database extends Model
     {
         $id = 'id' . ucfirst(substr($table, 2, strlen($table)));
         $this->querySimpleExecute('insert into ' . $table . ' ' . $this->mergeStrings($columns, '') . ' values ' . $this->mergeStrings($values, '\''));
-        $results = $this->querySimpleExecute("select max($id) from " . $table);
+        $results = $this->querySimpleExecute("SELECT max($id) from " . $table);
         $results = $this->formatData($results);
         return (int)($results[0]["max($id)"]);
     }
@@ -335,6 +397,19 @@ class Database extends Model
         //$this->sendMail($subject, $body);
 
         return $this->addData('t_reservation', ['resDate', 'resTable', 'resHour', 'fkMeal', 'fkUser'], [$date, $table, $hour, $mealId, $userId]);
+    }
+
+    function deleteMealById($id){
+        $this->queryPrepareExecute(
+            "UPDATE t_meal SET meaDisplay = '0' WHERE t_meal.idMeal = :intId",
+            array(
+                array(
+                    "marker" => "intId",
+                    "var" => $id,
+                    "type" => PDO::PARAM_INT
+                )
+            )
+        );
     }
 
     /**

@@ -190,7 +190,7 @@ class HomeController extends Controller
     {
         include_once 'model/Database.php';
         $db = new Database();
-
+        
         $currentMeals = $db->getCurrentMeals();
 
         $view = file_get_contents('view/page/Accueil.php');
@@ -263,8 +263,10 @@ class HomeController extends Controller
     private function OptionAction()
     {
         // Reset variables
-        $menuErrors = null;
-        $menuSuccess = null;
+        $_SESSION['menuErrors'] = null;
+        $_SESSION['menuSuccess'] = null;
+        $_SESSION['menuInfo'] = null;
+        $Scrollspy = null;
 
         // Validation
         if ($_SERVER['REQUEST_METHOD'] == "POST") {
@@ -272,59 +274,130 @@ class HomeController extends Controller
 
                 $menuErrors = array();
 
-                // No post values
-                if (!array_key_exists("inputMenu1", $_POST) || !array_key_exists("inputMenu2", $_POST)) {
-                    $menuErrors[] = "Une erreur est survenue, veuillez réessayer.";
+                include_once 'model/Database.php';
+                $db = new Database();
+
+                //Comptage du nombre total de menu qui on été afficher sur la page
+                $a=0;
+                $boucle = true;
+                while($boucle){
+                    if(isset($_POST['mealName-'. $a])){
+                        $a++;
+                    }
+                    else{
+                        $boucle = false;
+                    }
                 }
 
-                // If success
-                if (count($menuErrors) == 0) {
+                // OK FLAG
+                // OK FLAG
+                // OK FLAG
+                // OK FLAG
+                // OK FLAG
+                // OK FLAG
 
-                    include_once 'model/Database.php';
-                    $db = new Database();
+                $NbrOfMenu = $a;
 
-                    // Meals name
-                    $menu1 = htmlspecialchars($_POST['inputMenu1']);
-                    $menu2 = htmlspecialchars($_POST['inputMenu2']);
+                // Meals in DB
+                $meals = $db->getAllMeals();
 
-                    if (empty($menu1)) {
-                        $men1 = "-";
-                    } else if (empty($menu2)) {
-                        $menu2 = "-";
-                    }
+                for($z = 0; $z < $NbrOfMenu; $z++){
+                    // reset variable
+                    $menuExists = false;
+                    $restorMeal = false;
 
-                    // Meals in DB
-                    $meals = $db->getAllMeals();
+                    $menu = htmlspecialchars($_POST['mealName-'. $z]);
 
-                    // Check if they are already in the DB otherwise create them in the DB
-                    $menu1Exists = false;
-                    $menu2Exists = false;
-
-                    foreach ($meals as $meal) {
-                        if (strtolower($meal['meaName']) == strtolower($menu1)) {
-                            $menu1Exists = true;
-                        }
-                        if (strtolower($meal['meaName']) == strtolower($menu2)) {
-                            $menu2Exists = true;
-                        }
-                    }
-
-                    if (!$menu1Exists) {
-                        $db->addMeal($menu1);
-                    }
-                    if (!$menu2Exists) {
-                        $db->addMeal($menu2);
+                    if(empty($menu)){
+                        $menu = "-";
                     }
                     
-                    // Set the new meals to currentMeal
-                    $db->setNewCurrentMeals($menu1, $menu2);
+                    // Check if they are already in the DB otherwise create them in the DB
+                    
 
-                    // User feedback
-                    $menuSuccess = true;
+                    // marche pas ici
+                    //echo($menu ." - OK");
+                    
 
-                    $db = null;
+                    foreach ($meals as $meal) {
+                        if (strtolower($meal['meaName']) == strtolower($menu) && $meal['idMeal'] != $_POST['mealID-'. $z] && ($meal['meaName'] != null || $meal['meaName'] == "-")) {
+                            //Si le champs meaDisplay est a 0, on le réactive
+                            if($meal['meaDisplay'] == 0){
+                                // on va réactiver un ancien plat qui a le même nom et supprimer la row dernièrement créer pour ne pas avoir de double
+                                $db->reactivateMeal($meal['idMeal']);
+                                $db->deleteMealById($_POST['mealID-'. $z]);
+
+                                $restorMeal = true;
+                            }
+                            else{
+                                //On a trouvé ce que l'on voulait, c'est à dire un doublon.
+                                $menuExists = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if(isset($_POST['mealCurrentMeal-'. $z])){
+
+                        if($_POST['mealCurrentMeal-'. $z] == "on"){
+                            $intCurrentMeal = 1;
+                        }
+                        elseif($_POST['mealCurrentMeal-'. $z] == "off"){
+                            $intCurrentMeal = 0;
+                        }
+                    }
+                    else{
+                        $intCurrentMeal = 0;
+                    }
+                    
+
+                    //message d'erreur car le plat existe déjà dans la DB.
+                    if ($menuExists) {
+                        $_SESSION['menuErrors'][] = "Le plat (". $menu .") exist déjà, veillez saisir un autre plat pour le Menu N°". ($z+1);
+                    }
+                    elseif($_POST['mealStartDate-'. $z] > $_POST['mealDeadline-'. $z]){
+                        $_SESSION['menuErrors'][] = "La date du Menu N°". ($z+1) ." (". $menu .") n'est pas correcte. La date de début doit être avant la date de fin";
+                    }
+                    else{
+
+
+                        $mealId = $_POST['mealID-'. $z];
+                        $mealCurrentMeal = $intCurrentMeal;
+                        $mealStartDate = htmlspecialchars($_POST['mealStartDate-'. $z]);
+                        $mealDeadline = htmlspecialchars($_POST['mealDeadline-'. $z]);
+
+                        // update row
+                        $db->updateMeal($mealId, $menu, $mealCurrentMeal, $mealStartDate, $mealDeadline);
+                    }
+
+                    //Autre message
+                    if($restorMeal){
+                        $_SESSION['menuInfo'][] = "le menu N° ". ($z+1) ." (". $menu .") existait déjà, mais avait été supprimer. Le plat est maintenant réactivé";
+                    }
                 }
+                // User feedback
+                if(!isset($_SESSION['menuErrors'])){
+                    $_SESSION['menuSuccess'] = true;
+                    $Scrollspy = "#changeMenu";
+                }
+
+                $db = null;
             }
+            elseif(isset($_POST['addMenu'])){
+                include_once 'model/Database.php';
+                $db = new Database();
+
+                $db->addNewMeal();
+            }
+        }
+
+        if(isset($_GET['supprMeal'])){
+            include_once 'model/Database.php';
+            $db = new Database();
+
+            $db->deleteMealById($_GET['supprMeal']);
+
+            header("Location: index.php?controller=home&action=Option$Scrollspy");
         }
         // End validation
 
@@ -332,8 +405,9 @@ class HomeController extends Controller
 
         $db = new Database();
 
-        $meals = $db->getAllMeals();
-        $currentMeals = $db->getCurrentMeals();
+        //Variable en SESSION afin de pouvoir récupérer l'information dans la prochaine page
+        $_SESSION['meals'] = $db->getAllMealsDisplayed();
+        // $_SESSION['$currentMeals'] = $db->getCurrentMeals(); - Old
 
         $view = file_get_contents('view/page/Option.php');
 
@@ -478,10 +552,6 @@ class HomeController extends Controller
                 //Regarde si l'utilisateur n'a pas déjà une réservation à cette date
                 $result=$database->readReservationUserDate($_SESSION['username'], $_POST[$sResDate]);
 
-                //Debug
-                /*echo($_POST[$sResDate]);
-                echo(" -result ");
-                echo(count($result));*/
                 if(count($result) == $maxorderperday){
                     $commandErrors[] = "Vous avez déjà réserver " . $maxorderperday . " fois pour cette date";
                 }
@@ -495,7 +565,6 @@ class HomeController extends Controller
                     
                     //that condition is for checking wether the reservation exists already, only one reservation per date/table and hour - only one reservation per personne/day
                     
-                    //TODO rework it to handle limit of 4 people per table
                     //if ($database->reservationExistsAt($date, $table, $hour) < 0) {
                     $database->addReservation($date, 0 /*, $table*/, $hour, $_POST[$sResMeal], $database->getIdUser($_SESSION['username']));
                     //echo 'Réservation ajoutée !<br>';
