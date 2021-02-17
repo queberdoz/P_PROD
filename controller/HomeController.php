@@ -498,9 +498,7 @@ class HomeController extends Controller
      */
     private function CommanderAction()
     {
-
         $maxorderperday=1;
-        $maxpepolepertable=1;
 
         include_once 'model/Database.php';
         $database = new Database();
@@ -556,17 +554,16 @@ class HomeController extends Controller
                     $commandErrors[] = "Vous avez déjà réserver " . $maxorderperday . " fois pour cette date";
                 }
 
-                //$result=$database->
-
                 if (count($commandErrors) == 0) {
-                    $date = $_POST[$sResDate];
+                    $date = htmlspecialchars($_POST[$sResDate]);
                     //$table = $_POST[$sResTable];
-                    $hour = $_POST[$sResHour];
+                    $hour = htmlspecialchars($_POST[$sResHour]);
+                    $meal = htmlspecialchars($_POST[$sResMeal]);
+                    
                     
                     //that condition is for checking wether the reservation exists already, only one reservation per date/table and hour - only one reservation per personne/day
-                    
                     //if ($database->reservationExistsAt($date, $table, $hour) < 0) {
-                    $database->addReservation($date, 0 /*, $table*/, $hour, $_POST[$sResMeal], $database->getIdUser($_SESSION['username']));
+                    $database->addReservation($date, 0 /*, $table*/, $hour, $meal, $database->getIdUser($_SESSION['username']));
                     //echo 'Réservation ajoutée !<br>';
                     $_SESSION['CommandDone'] = true;
                     $_SESSION['CommandTemp'] = $_POST;
@@ -575,6 +572,7 @@ class HomeController extends Controller
             }
         }
         // END VALIDATION
+        $_SESSION['currentMeals'] = $database->getCurrentMeals();
 
         $view = file_get_contents('view/page/Commander.php');
 

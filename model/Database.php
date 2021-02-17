@@ -116,7 +116,7 @@ class Database extends Model
     }
 
     function getCurrentMeals() {
-        $results = $this->querySimpleExecute("SELECT * from t_meal where meaIsCurrentMeal");
+        $results = $this->querySimpleExecute("SELECT * from t_meal where meaIsCurrentMeal = '1'");
         return $results = $this->formatData($results);
     }
 
@@ -238,7 +238,8 @@ class Database extends Model
         );
     }
 
-    public function setNewCurrentMeals($mealName1, $mealName2) {
+    //TODO : supprimer si tout va bien
+    /*public function setNewCurrentMeals($mealName1, $mealName2) {
         // Set false to the old current meals
         $this->querySimpleExecute(
             "UPDATE t_meal SET meaIsCurrentMeal = 0 WHERE meaIsCurrentMeal = 1"
@@ -263,7 +264,7 @@ class Database extends Model
                     "type" => PDO::PARAM_STR)
             )
         );
-    }
+    }*/
 
     /**
      * Returns the user with the corresponding id as an array
@@ -387,21 +388,43 @@ class Database extends Model
      * @param int $userId
      * @return int id of the new reservation
      */
-    function addReservation($date, $table, $hour, $mealId, $userId): int
+    function addReservation($date, $table, $hour, $idmeal, $userId)
     {
-        $user = $this->getUser($userId);
-        $user = $user['useFirstName'] . ' ' . $user['useLastName'];
-        $subject = 'Réservation de ' . $user;
-        $body = $user . ' a réservé un menu végétarien pour le ' . $date . /*$table . ' ' . $meal*/ ' à ' . $hour . 'h.';
-
-        //$this->sendMail($subject, $body);
-
-        return $this->addData('t_reservation', ['resDate', 'resTable', 'resHour', 'fkMeal', 'fkUser'], [$date, $table, $hour, $mealId, $userId]);
+        $this->queryPrepareExecute(
+            "INSERT INTO t_reservation (resDate, resHour, fkMeal, resTable, fkUser) VALUES (:resDate, :resHour, :idmeal, :resTable, :userId)",
+            array(
+                1=> array(
+                    "marker" => "resDate",
+                    "var" => $date,
+                    "type" => PDO::PARAM_STR
+                ),
+                2=> array(
+                    "marker" => "resTable",
+                    "var" => 0,
+                    "type" => PDO::PARAM_INT
+                ),
+                3=> array(
+                    "marker" => "resHour",
+                    "var" => $hour,
+                    "type" => PDO::PARAM_STR
+                ),
+                4=> array(
+                    "marker" => "idmeal",
+                    "var" => $idmeal,
+                    "type" => PDO::PARAM_INT
+                ),
+                5=> array(
+                    "marker" => "userId",
+                    "var" => $userId,
+                    "type" => PDO::PARAM_INT
+                )
+            )
+        );
     }
 
     function deleteMealById($id){
         $this->queryPrepareExecute(
-            "UPDATE t_meal SET meaDisplay = '0' WHERE t_meal.idMeal = :intId",
+            "UPDATE t_meal SET meaDisplay = '0', mealsCurrentMeal = '0'  WHERE t_meal.idMeal = :intId",
             array(
                 array(
                     "marker" => "intId",
