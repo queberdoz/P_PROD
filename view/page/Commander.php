@@ -40,7 +40,8 @@ if (!array_key_exists('username', $_SESSION)) {
             ?>
             <div class="form-group mt-4">
                 <label>Date de la réservation : </label>
-                <input onchange="dateChange(this.value)" class="form-control" type="date" name="resDate" id="dateOrder" value = >
+                <!-- TODO : limiteur, commande que pour 2 semaines après la date now. -->
+                <input onchange="dateChange(this.value)" class="form-control" type="date" name="resDate" id="dateOrder" min="<?php echo(date("Y-m-d", strtotime("+1 days"))); ?>" max="<?php echo(date("Y-m-d", strtotime("+2 week"))); ?>">
             </div>
             <div class="form-group">
                 <label for="selectMeal">Plat choisi : </label>
@@ -191,10 +192,13 @@ if (array_key_exists('CommandDone', $_SESSION) && $_SESSION['CommandDone']) {
 
 // Transformation d'un tableau SQL en tableau JSON pour qu'il soit facilement mit en tableau par le javascript
 function getData(){
+    //Mise en variable de tout les plats
     $data = $_SESSION['currentMeals'];
 
+    //Debut du tableau
     $strarray = "{";
 
+    //Creation du contenu du tableau
     for($d=0; $d < count($data); $d++){
         $skip = false;
 
@@ -212,17 +216,21 @@ function getData(){
             $skip = true;
         }
 
+        //Met une virgul entre chaque tableau
         if($d != count($data) && $skip == false){
             $strarray .= ',';
         }
 
+        //Permet de supprimer l'ancienne virgule, car elle est en trop
         if($skip == true){
             $strTemp = $strarray;
             $strarray = substr($strTemp, 0, -1);
         }
     }
-
+    //Fin du tableau
     $strarray .= "}";
+
+    //Retour du tableau en format JSON
     return $strarray;
 }
 ?>
@@ -249,17 +257,10 @@ function getData(){
 
     //Permet d'ajouter un plat au dropdown
     function addOption(meal){
-        /*var option = document.createElement("option");
-        var x = document.getElementById("selectMeal")
-
-        option.text = meal['meaName'];
-
-        x.add(option);*/
-
+        //selectionne l'element suivant sont id
         option = document.querySelector('.selectedMeal');
-
+        //Ajout le code HTML a l'element selectionner
         option.innerHTML += "<option value='" + meal['idMeal'] + "'>" + meal['meaName'] + "</option>";
-
     }
 
     //Supprime tout les choix et remet celui de base
