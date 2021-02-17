@@ -238,34 +238,6 @@ class Database extends Model
         );
     }
 
-    //TODO : supprimer si tout va bien
-    /*public function setNewCurrentMeals($mealName1, $mealName2) {
-        // Set false to the old current meals
-        $this->querySimpleExecute(
-            "UPDATE t_meal SET meaIsCurrentMeal = 0 WHERE meaIsCurrentMeal = 1"
-        );
-        // Set true to the new current meals
-        $this->queryPrepareExecute(
-            "UPDATE t_meal SET meaIsCurrentMeal = 1 WHERE meaName = :varMeaName",
-            array(
-                array(
-                    "marker" => "varMeaName",
-                    "var" => $mealName1,
-                    "type" => PDO::PARAM_STR
-                )
-            )
-        );
-        $this->queryPrepareExecute(
-            "UPDATE t_meal SET meaIsCurrentMeal = 1 WHERE meaName = :varMeaName",
-            array(
-                array(
-                    "marker" => "varMeaName",
-                    "var" => $mealName2,
-                    "type" => PDO::PARAM_STR)
-            )
-        );
-    }*/
-
     /**
      * Returns the user with the corresponding id as an array
      * @param $userId int
