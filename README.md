@@ -51,7 +51,7 @@ Les parties du code concernant le choix de tables ou d'autres plats lors d'une c
 ## TODO
 Bugs connus :
 - des utilisateurs peuvent commander un plat puis le plat peut être changé sans qu'ils ne le sachent. de plus la vue admin récapitulatif ne comptera que le plat actuel. Plusieurs solutions :
-  - :large_blue_circle: t_meal : ajouter champ deadline, à compléter en vue admin lors de changements de plats, n'accepter commande pour le plat donné que si dans la deadline.
+  - :white_check_mark: t_meal : ajouter champ deadline, à compléter en vue admin lors de changements de plats, n'accepter commande pour le plat donné que si dans la deadline.
   - :x: non, car add champ dans t_meal -- vue admin : lorsque changements de menus, prévenir si réservation dans le futur avec ces plats avant d'effectuer le changement.
   - ? :white_circle: ? vue admin : lister tous les types de plats dans récapitulatif.
                 
@@ -65,7 +65,7 @@ Fonctionnalités légères :
 - :large_orange_diamond: vue admin : ajouter changement de semaines pour le tableau (flèches gauche/droite).
 - :white_check_mark: vue user : voir l'ensemble de commandes passées + en annuler (pas dispo le matin même).
 - :large_orange_diamond: vue user : ajouter options de gestion de compte (suppression, reset mdp, etc).
-- :large_orange_diamond: vue user : empêcher sélection de dates lors de vacances/fériés scolaires.
+- :large_blue_circle: vue user : empêcher sélection de dates lors de vacances/fériés scolaires.
 - :x: t_reservation : ajouter champ "créé le [date]" -- plus besoin car les plats auront un date de début et de fin. Le but du champs "créé le" était de pouvoir supprimer le plat si celui-ci venait a changé avant la réservation.
 - :x: t_reservation : ajouter champ "manger sur place/à l'emporter" -- Rien n'est encore prévu.
 - serveur : créer nouvelle adresse mail (sans "test" dans son nom).
