@@ -1,5 +1,5 @@
 # ETMeaL
-Projet en cours permettant la réservation de menus, et de table, à terme, à la cafétaria de l'ETML.
+Projet en cours permettant la réservation de menus végétarien, à la cafétaria de l'ETML.
 ### Autres documentations et fichiers
 Plus d'informations quant à la documentation du projet se trouve sur K:\INF\Eleves\Classes\FIN2\02_P_PROD\adrbarreira_simguggisberg. 
 
@@ -21,7 +21,7 @@ Idéalement le projet devrait être fini en septembre 2021, avec des tests lors 
 - Composer est utilisé pour installer phpmailer afin de gérer l'envoi de mail.
 - La partie HTML/CSS a été faite de manière séparé du code PHP, qui utilise un framework MVC custom ETML.
 - Une base de données MySql gère les utilisateurs et les réservations, le fichier de création de celle-ci est src/database/bd_etmeal.sql.
-- Bootstrap pour tout ce qui est styles et rendre le site responsif.
+- Bootstrap pour tout ce qui est styles et rendre le site responsive.
 
 ### Notes
 Deux types de comptes existent, défini en fonction de leur useRole; la convention est la suivante : 100 étant le maximum, pour un super admin, et en dessous de 50 un user standard. Il est uniquement possible de modifier useRole via la basede données mysql pour le moment, un compte admin a déjà été créé, son mot de passe se trouve dans le fichier configConfidential.ini.php dans le dossier parent (voir point autres documentations et fichiers pour plus de détails).
@@ -53,11 +53,9 @@ Bugs connus :
 - des utilisateurs peuvent commander un plat puis le plat peut être changé sans qu'ils ne le sachent. de plus la vue admin récapitulatif ne comptera que le plat actuel. Plusieurs solutions :
   - :white_check_mark: t_meal : ajouter champ deadline, à compléter en vue admin lors de changements de plats, n'accepter commande pour le plat donné que si dans la deadline.
   - :x: non, car add champ dans t_meal -- vue admin : lorsque changements de menus, prévenir si réservation dans le futur avec ces plats avant d'effectuer le changement.
-  - ? :white_circle: ? vue admin : lister tous les types de plats dans récapitulatif.
-                
-
-  - :white_circle: vue utilisateur : restreindre commande à semaine courante (voir 2 semaines, peux être mieux et plus facile à implémenter).
+  - :x: vue utilisateur : restreindre commande à semaine courante (voir 2 semaines, peux être mieux et plus facile à implémenter). -- pas besoin, aucune limite mise
   - :white_check_mark: un seul menu par jour - les utilisateurs peuvent commander plusieurs menu.
+- :white_check_mark: Envoie d'email à chaque commande -- Fonction supprimé.
 
 Fonctionnalités légères :
 - :x: vue user : x utilisateur ne peuvent pas réserver la même table durant la même période -- annuler car, utilise déjà une feuille pour l'attribution et le suivit à cause du Covid.
@@ -65,7 +63,7 @@ Fonctionnalités légères :
 - :large_orange_diamond: vue admin : ajouter changement de semaines pour le tableau (flèches gauche/droite).
 - :white_check_mark: vue user : voir l'ensemble de commandes passées + en annuler (pas dispo le matin même).
 - :large_orange_diamond: vue user : ajouter options de gestion de compte (suppression, reset mdp, etc).
-- :white_circle: vue user : empêcher sélection de dates lors de vacances/fériés scolaires.
+- :x: vue user : empêcher sélection de dates lors de vacances/fériés scolaires. -- Non car il n'y a pas que les élèves qui peuvent commandé.
 - :x: t_reservation : ajouter champ "créé le [date]" -- plus besoin car les plats auront un date de début et de fin. Le but du champs "créé le" était de pouvoir supprimer le plat si celui-ci venait a changé avant la réservation.
 - :x: t_reservation : ajouter champ "manger sur place/à l'emporter" -- Rien n'est encore prévu.
 - serveur : créer nouvelle adresse mail (sans "test" dans son nom).
@@ -76,12 +74,12 @@ Fonctionnalités complexes :
 - vue admin/user : ajouter image pour plats.
 - serveur : envoyer un email/jour récapitulatif (à minuit) pour les commandes du lendemain/surlendemain -- utilisation de script impossible sur un héberger web, à voir lors de l'hébergement.
 - :x: sécurité : identifier personne via carte étudiant/~~eduvaud~~ (déterminer manière de vérifier) -- Trop compliquer, l'id trouvé sur la carte est propre à la carte et non à l'étudiant et la synchronisation avec un fichier sur sharepoint demande un accès spécial qui demanderai d'être sécuriser.
-- :white_check_mark: sécurité : vérifier le compte via email.
+- :large_blue_circle: sécurité : vérifier le compte via email.
 
 Fonctionnalités Optionel :
 - Pouvoir modifier sa commande au lieux de supprimer et d'en refaire une.
 - vue admin : rendre tableau mieux responsive (pour petites devices).
-- :large_blue_circle: Commande : Pour la commande d'un plat, faire en sorte que "Choisir" ne soit pas sélectionnable.
+- :white_check_mark: Commande : Pour la commande d'un plat, faire en sorte que "Choisir" ne soit pas sélectionnable.
 - Inscription : Pour l'inscription mettre la case en rouge si elle est fausse.
 - Inscription : Griser le bouton "Inscritption" si tout les champs ne sont pas au vert.
 - :x: Connexion avec le login d'Eduvaud (Office 365) quelque recherche --> [lien](https://docs.microsoft.com/en-us/previous-versions/azure/dn646737(v=azure.100)?redirectedfrom=MSDN) -- Demanderai des droits spéciaux pour rechercher dans la DB, cela prendrai trop de temps et voir pas autorisé.
