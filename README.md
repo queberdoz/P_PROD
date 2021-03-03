@@ -74,7 +74,7 @@ Fonctionnalités complexes :
 - vue admin/user : ajouter image pour plats.
 - serveur : envoyer un email/jour récapitulatif (à minuit) pour les commandes du lendemain/surlendemain -- utilisation de script impossible sur un héberger web, à voir lors de l'hébergement.
 - :x: sécurité : identifier personne via carte étudiant/~~eduvaud~~ (déterminer manière de vérifier) -- Trop compliquer, l'id trouvé sur la carte est propre à la carte et non à l'étudiant et la synchronisation avec un fichier sur sharepoint demande un accès spécial qui demanderai d'être sécuriser.
-- :large_blue_circle: sécurité : vérifier le compte via email.
+- :white_check_mark: sécurité : vérifier le compte via email.
 
 Fonctionnalités Optionel :
 - Pouvoir modifier sa commande au lieux de supprimer et d'en refaire une.
