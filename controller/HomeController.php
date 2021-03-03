@@ -21,6 +21,20 @@ class HomeController extends Controller
      */
     public function display()
     {
+        if(array_key_exists('username', $_SESSION) && isset($_SESSION['username'])){
+            include_once 'model/Database.php';
+            $database = new Database();
+    
+            $return = $database->GetUserInfo($_SESSION['username']);
+    
+            $_SESSION['role'] = $return[0]['useRole'];
+            $_SESSION['emailVerif'] = $return[0]['useVerif'];
+        }
+
+        $_SESSION['adminRight'] = false;
+        if(array_key_exists('role', $_SESSION) && $_SESSION['role'] >= 50){
+            $_SESSION['adminRight'] = true;
+        }
 
         if (array_key_exists('action', $_GET)) {
             $action = $_GET['action'] . "Action"; // listAction
@@ -33,6 +47,10 @@ class HomeController extends Controller
                 $action = 'AccueilAction'; // listAction
                 $_GET['action'] = 'Accueil';
             }
+        }
+
+        if(array_key_exists('Verif', $_GET) && array_key_exists('Mail', $_GET)){
+            $action = 'VerifAction';
         }
 
 
@@ -57,19 +75,21 @@ class HomeController extends Controller
             if (isset($_POST['submitBtn'])) {
                 include_once 'model/Database.php';
 
-                $registerRepository = new Database();
+                $database = new Database();
 
                 if (array_key_exists('username', $_POST) && $_POST['username'] != "") {
 
-                    $compte = $registerRepository->login($_POST['username']);
+                    $compte = $database->login($_POST['username']);
 
                     if (array_key_exists('password', $_POST) && $_POST['password'] != "") {
                         if ($compte != -1) {
                             if (password_verify($_POST['password'], $compte['usePassword'])) {
                                 $_SESSION['username'] = $compte['useUsername'];
-                                $_SESSION['role'] = $compte['useRole'];
                                 $_SESSION['connected'] = true;
                                 $_SESSION['loginError'] = null;
+                                //Ces variables sont actualiser à chaque changement de page
+                                $_SESSION['role'] = $compte['useRole'];
+                                $_SESSION['emailVerif'] = $compte['useVerif'];
                                 header("Location: index.php?controller=home&action=Accueil");
                             } else {
 
@@ -121,7 +141,7 @@ class HomeController extends Controller
 
                 include_once 'model/Database.php';
 
-                $registerRepository = new Database();
+                $database = new Database();
 
                 if (!array_key_exists('username', $_POST) || $_POST['username'] == "") {
                     $registerErrors[] = "Veuillez entrez un nom d'utilisateur.";
@@ -137,6 +157,12 @@ class HomeController extends Controller
                     if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
                         $registerErrors[] = "Veuillez renseigner un mail valide.";
                     }
+                    else{
+                        //Restriction pour l'inscription au email @eduvaud.ch et @vd.ch
+                        if(!(strpos(strtolower($_POST['email']), "@eduvaud.ch") !== false || strpos(strtolower($_POST['email']), "@vd.ch") !== false)) {
+                            $registerErrors[] = "Veuillez inscrire une adresse @eduvaud.ch ou @vd.ch.";
+                        }
+                    }
                 }
 
 
@@ -148,14 +174,32 @@ class HomeController extends Controller
                     $registerErrors[] = "Veuillez remplir le champ Nom.";
                 }
 
-                if (!array_key_exists('username', $_POST) || ($registerRepository->userExistsAt(strtolower($_POST['username'])) >= 0)) {
+                if (!array_key_exists('username', $_POST) || ($database->userExistsAt(strtolower($_POST['username'])) >= 0)) {
                     $registerErrors[] = "Nom d'utilisateur déjà présent, veuillez en sélectionner un autre.";
                 }
 
                 if (empty($registerErrors)) {
-                    $compte = $registerRepository->register($_POST['username'], $_POST['password'], $_POST['email'], $_POST['firstName'], $_POST['lastName'], 0);
-                    unset($_POST);
-                    $success = true;
+                    $compte = $database->register($_POST['username'], $_POST['password'], $_POST['email'], $_POST['firstName'], $_POST['lastName'], 0);
+
+                    //Vérification que l'email ou le pseudo n'est pas duplique.
+                    $error = $compte->errorInfo();
+                    //print_r($compte->errorInfo());
+                    if($error[1] == 1062){
+                        if(strpos($error[2], "useEmail") !== false){
+                            $registerErrors = array("l'email existe déjà, veuillez le revérifier. Si c'est votre adresse mail vous pouvez contacter l'administrateur par mail au groupe \"ETML_RESTAURANT\" ou par téléphone au 021 316 77 89");
+                        }
+                        else if(strpos($error[2], "useUsername") !== false){
+                            $registerErrors = array("Le nom d'utilisateur existe déjà veuillez en entrer un autre");
+                        }
+                    }
+                    else{
+
+                        $idUser = $database->getIdUser($_POST['username']);
+                        //Envoie de l'email de vérification
+                        $this->sendMailVerifTo($idUser, $_POST['email']);
+
+                        $success = true;
+                    }
                 }
             }
         }
@@ -165,7 +209,59 @@ class HomeController extends Controller
         $content = ob_get_clean();
 
         return $content;
+    }
 
+    private function VerifAction()
+    {
+        //Pour l'utilisation de la BD
+        include_once 'model/Database.php';
+        $database = new Database();
+
+        if (array_key_exists('Verif', $_GET) && array_key_exists('Mail', $_GET)) {
+            if (isset($_GET['Verif']) && isset($_GET['Mail'])) {
+                $hash = $_GET['Verif'];
+                $mail = $_GET['Mail'];
+
+                $return = $database->verifLink($hash, $mail);
+
+                //print_r($return);
+                if(count($return) == 1){
+                    if($return[0]['verDeadline'] > date("Y-m-d H:i:s")){
+                        ///Correct URL
+                        $_SESSION['statusLink'] = 1;
+                        
+                        //Account OK
+                        $database->userOk($mail);
+
+                        //Delete all link for this account
+                        $database->deleteLink($return[0]['idVerification']);
+                    }
+                    else{
+                        //link expired
+                        $_SESSION['statusLink'] = 0;
+                    }
+                }
+                else{
+                    //Wrong URL entered or link expired
+                    $_SESSION['statusLink'] = 0;
+                }
+            }
+        }
+        //Delete all link expired
+        $dateNow = date("Y-m-d H:i:s");
+
+        $allId = $database->allExpiredLink($dateNow);
+        foreach($allId as $id){
+            $database->deleteLink($id['idUser']);
+        }
+
+
+        $view = file_get_contents('view/page/Verif.php');
+        ob_start();
+        eval('?>' . $view);
+        $content = ob_get_clean();
+
+        return $content;
     }
 
     /**
@@ -289,13 +385,6 @@ class HomeController extends Controller
                     }
                 }
 
-                // OK FLAG
-                // OK FLAG
-                // OK FLAG
-                // OK FLAG
-                // OK FLAG
-                // OK FLAG
-
                 $NbrOfMenu = $a;
 
                 // Meals in DB
@@ -313,11 +402,6 @@ class HomeController extends Controller
                     }
                     
                     // Check if they are already in the DB otherwise create them in the DB
-                    
-
-                    // marche pas ici
-                    //echo($menu ." - OK");
-                    
 
                     foreach ($meals as $meal) {
                         if (strtolower($meal['meaName']) == strtolower($menu) && $meal['idMeal'] != $_POST['mealID-'. $z] && ($meal['meaName'] != null || $meal['meaName'] == "-")) {
@@ -547,6 +631,15 @@ class HomeController extends Controller
                     $commandErrors[] = "Veuillez entrer un plat valide.";
                 }
 
+                if(array_key_exists('emailVerif', $_SESSION) && isset($_SESSION['emailVerif'])){
+                    if($_SESSION['emailVerif'] == 0){
+                        $commandErrors[] = "Votre adresse mail n'est pas valide";
+                    }
+                }
+                else{
+                    $commandErrors[] = "Votre adresse mail n'est pas valide";
+                }
+
                 //Regarde si l'utilisateur n'a pas déjà une réservation à cette date
                 $result=$database->readReservationUserDate($_SESSION['username'], $_POST[$sResDate]);
 
@@ -574,7 +667,17 @@ class HomeController extends Controller
         // END VALIDATION
         $_SESSION['currentMeals'] = $database->getCurrentMeals();
 
-        $view = file_get_contents('view/page/Commander.php');
+        if(array_key_exists('emailVerif', $_SESSION) && isset($_SESSION['emailVerif'])){
+            if($_SESSION['emailVerif'] == 1){
+                $view = file_get_contents('view/page/Commander.php');
+            }
+            else{
+                $view = file_get_contents('view/page/Commander.php');
+            }
+        }
+        else{
+            $view = file_get_contents('view/page/Commander.php');
+        }
 
         ob_start();
         eval('?>' . $view);
@@ -583,5 +686,61 @@ class HomeController extends Controller
         return $content;
     }
 
+    private function sendMailVerifTo($idUser, $mail){
+        include_once 'model/Database.php';
+        $database = new Database();
 
+        //TODO : Raccourcir le lien en enlevant le GET['home'] et GET['action']
+        $actual_link = "http://". $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        $hashLink = "&Verif=";
+
+        //rand() génère un chiffre entre 0 et 7843976 puis md5() va le transformer en phrase de 32 caracteres
+        $hash = md5(rand(0,7843976));
+
+        $mail = "&Mail=" . $mail;
+
+        //Creation du lien
+        $alllink = $actual_link . $hashLink . $hash . $mail;
+
+        $date = date("Y-m-d H:i:s", strtotime("+1 days"));
+
+        $database->addNewHash($hash, $date, $idUser);
+
+        $database->sendVerifMail($alllink, $mail);
+    }
+    
+    private function CompteAction(){
+        include_once 'model/Database.php';
+        $database = new Database();
+
+        if (array_key_exists('username', $_SESSION) && isset($_SESSION['username'])){ 
+            $return = $database->GetUserInfo($_SESSION['username']);
+
+            $_SESSION['allUserInfo'] = $return[0];
+
+            $view = file_get_contents('view/page/Compte.php');
+        }
+        else{
+            $view = file_get_contents('view/page/Accueil.php');
+        }
+        
+        
+        if(array_key_exists('verifier', $_POST) && isset($_POST['verifier'])){
+            $idUser = $database->getIdUser($_SESSION['username']);
+            $userInfo = $database->GetUserInfo($_SESSION['username']);
+
+            $mail = $userInfo[0]['useEmail'];
+
+            //Envoie de l'email de vérification
+            $this->sendMailVerifTo($idUser, $mail);
+
+            $_SESSION['success'] = true;
+        }
+
+        ob_start();
+        eval('?>' . $view);
+        $content = ob_get_clean();
+
+        return $content;
+    }
 }

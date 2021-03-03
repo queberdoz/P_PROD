@@ -396,7 +396,7 @@ class Database extends Model
 
     function deleteMealById($id){
         $this->queryPrepareExecute(
-            "UPDATE t_meal SET meaDisplay = '0', mealsCurrentMeal = '0'  WHERE t_meal.idMeal = :intId",
+            "UPDATE t_meal SET meaDisplay = '0', meaIsCurrentMeal = '0'  WHERE t_meal.idMeal = :intId",
             array(
                 array(
                     "marker" => "intId",
@@ -431,7 +431,7 @@ class Database extends Model
      * @param $lastName
      * @param $role
      */
-    public function register($username, $password, $email, $firstName, $lastName, $role)
+    public function register($username, $password, $email, $firstName, $lastName, $role1)
     {
         $passwordHash = password_hash($password, PASSWORD_BCRYPT);
         //$query = $this->addUser($username, $firstName, $lastName, $email, $password, $role);
@@ -442,7 +442,7 @@ class Database extends Model
                 'type' => PDO::PARAM_STR
             ),
             2=> array(
-                'marker' => ':password',
+                'marker' => ':passwordHash',
                 'var' => $passwordHash,
                 'type' => PDO::PARAM_STR
             ),
@@ -462,16 +462,17 @@ class Database extends Model
                 'type' => PDO::PARAM_STR
             ),
             6=> array(
-                'marker' => ':role',
-                'var' => $role,
+                'marker' => ':role1',
+                'var' => $role1,
                 'type' => PDO::PARAM_STR
             )
         );
 
-        $results = $this->queryPrepareExecute("INSERT INTO t_user (useUsername, usePassword, useEmail, useFirstName, UseLastName, useRole) VALUES (:username, :password, :email, :firstName, :lastName, :role)", $values);
+            $req = $this->queryPrepareExecute("INSERT INTO t_user (useUsername, usePassword, useEmail, useFirstName, UseLastName, useRole) VALUES (:username, :passwordHash, :email, :firstName, :lastName, :role1)", $values);
+            
 
-        $results = $this->unsetData($results);
-        //$insertUser = "INSERT INTO t_user (useUsername, usePassword, useEmail, useFirstName, UseLastName, useRole) VALUES ('" . $username . "' , '" . $passwordHash . "' , '" . $email . "' , '" . $firstName . "' , '" . $lastName . "' , '" . $role . "')";
+        //$results = $this->unsetData($results);
+        return $req;
     }
 
     /**
@@ -545,5 +546,157 @@ class Database extends Model
             error_log("\n[" . date("H:i:s Y-m-d") . "]" . "Message could not be sent. Mailer Error: {$mail->ErrorInfo}", 3, "logs/ErrorLogs.log");
             //error_log("Message could not be sent. Mailer Error: {$mail->ErrorInfo}", 3, "/logs/new");
         }
+    }
+
+    //Permet d'envoyer un email pour vérification
+    public function sendVerifMail($hashLink, $toAdresse){
+        include_once "configConfidential.ini.php";
+        // Instantiation and passing `true` enables exceptions
+        $mail = new PHPMailer(true);
+        $subject = "Mail de vérification";
+        $body = "Vous y êtes presque !! <br/>
+                Cliquer sur le lien ci-dessous pour vérifier votre compte <br/>
+                <a href='$hashLink'>" . $hashLink . "</a>";
+
+        try {
+            //Server settings
+            //$mail->SMTPDebug = SMTP::DEBUG_SERVER;                    // Enable verbose debug output
+            $mail->isSMTP();                                            // Send using SMTP
+            $mail->CharSet    = 'UTF-8';
+            $mail->Host       = 'smtp.office365.com';                   // Set the SMTP server to send through
+            $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
+            $mail->Username   = MAIL_USERNAME;                          // SMTP username
+            $mail->Password   = MAIL_PASSWORD;                          // SMTP password
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
+            $mail->Port       = 587;                                    // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
+
+
+            //Recipients
+            $mail->setFrom(MAIL_FROMADDRESS);
+
+            $mail->addAddress($toAdresse);                              // Add a recipient
+
+            // Content
+            $mail->isHTML(true);                                        // Set email format to HTML
+            $mail->Subject = $subject;
+            $mail->Body = $body;
+            $mail->AltBody = $body;
+
+            $mail->send();
+            //echo 'Message has been sent';
+        } catch (Exception $e) {
+            //echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+            error_log("\n[" . date("H:i:s Y-m-d") . "]" . "Message could not be sent. Mailer Error: {$mail->ErrorInfo}", 3, "logs/ErrorLogs.log");
+            //error_log("Message could not be sent. Mailer Error: {$mail->ErrorInfo}", 3, "/logs/new");
+        }
+    }
+
+    //Ajoute le hash avec comme liaison l'email et un délais de 24h pour activer 
+    public function addNewHash($hash, $date, $idUser){
+        $this->queryPrepareExecute(
+            "INSERT INTO t_verification (verhash, verDeadline, fkUser) VALUES (:hash, :date, :idUser)",
+            array(
+                1=> array(
+                    "marker" => "hash",
+                    "var" => $hash,
+                    "type" => PDO::PARAM_STR
+                ),
+                2=> array(
+                    "marker" => "date",
+                    "var" => $date,
+                    "type" => PDO::PARAM_STR
+                ),
+                3=> array(
+                    "marker" => "idUser",
+                    "var" => $idUser,
+                    "type" => PDO::PARAM_INT
+                )
+            )
+        );
+    }
+
+    //Verification du hash avec le mail.
+    public function verifLink($vHash, $Adresse){
+        $result1 = $this->queryPrepareExecute(
+            "SELECT * FROM t_verification LEFT JOIN t_user ON t_verification.fkUser = t_user.idUser WHERE verhash = :vHash AND useEmail = :Adresse",
+            array(
+                1=> array(
+                    "marker" => "vHash",
+                    "var" => $vHash,
+                    "type" => PDO::PARAM_STR
+                ),
+                2=> array(
+                    "marker" => "Adresse",
+                    "var" => $Adresse,
+                    "type" => PDO::PARAM_STR
+                )
+            )
+        );
+
+        $result2 = $this->formatData($result1);
+
+        return $result2;
+    }
+
+    //Supprime le lien car il a été utilisé.
+    public function deleteLink($idVerif){
+        $this->queryPrepareExecute(
+            "DELETE FROM t_verification WHERE t_verification.idVerification = :idVerif;",
+            array(
+                1=> array(
+                    "marker" => "idVerif",
+                    "var" => $idVerif,
+                    "type" => PDO::PARAM_STR
+                )
+            )
+        );
+    }
+
+    //Validation de l'utilisateur
+    public function userOk($adresse){
+        $this->queryPrepareExecute(
+            "UPDATE t_user SET useVerif = 1 WHERE t_user.useEmail = :Adresse",
+            array(
+                1=> array(
+                    "marker" => "Adresse",
+                    "var" => $adresse,
+                    "type" => PDO::PARAM_STR
+                )
+            )
+        );
+    }
+
+    //Selectionne tous les lien de validation expirer
+    public function allExpiredLink($dateNow){
+        $return = $this->queryPrepareExecute(
+            "SELECT idUser FROM t_verification WHERE verDeadline > :dateNow",
+            array(
+                1=> array(
+                    "marker" => "dateNow",
+                    "var" => $dateNow,
+                    "type" => PDO::PARAM_STR
+                )
+            )
+        );
+
+        return $return;
+    }
+
+    //Permet l'update du role et si l'adresse mail est vérifier ou non
+    public function GetUserInfo($username){
+        $result1 = $this->queryPrepareExecute(
+            "SELECT useUsername, useEmail, useFirstName, useLastName, useRole, useVerif FROM t_user WHERE useUsername = :username",
+            array(
+                1=> array(
+                    "marker" => "username",
+                    "var" => $username,
+                    "type" => PDO::PARAM_STR
+                )
+            )
+        );
+
+        $result2 = $this->formatData($result1);
+
+        return $result2;
     }
 }

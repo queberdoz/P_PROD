@@ -40,8 +40,7 @@ if (!array_key_exists('username', $_SESSION)) {
             ?>
             <div class="form-group mt-4">
                 <label>Date de la réservation : </label>
-                <!-- TODO : limiteur, commande que pour 2 semaines après la date now. -->
-                <input onchange="dateChange(this.value)" class="form-control" type="date" name="resDate" id="dateOrder" min="<?php echo(date("Y-m-d", strtotime("+1 days"))); ?>" max="<?php echo(date("Y-m-d", strtotime("+2 week"))); ?>">
+                <input onchange="dateChange(this.value)" class="form-control" type="date" name="resDate" id="dateOrder" min="<?php echo(date("Y-m-d", strtotime("+1 days"))); ?>">
             </div>
             <div class="form-group">
                 <label for="selectMeal">Plat choisi : </label>
@@ -192,6 +191,7 @@ if (array_key_exists('CommandDone', $_SESSION) && $_SESSION['CommandDone']) {
 
 // Transformation d'un tableau SQL en tableau JSON pour qu'il soit facilement mit en tableau par le javascript
 function getData(){
+    
     //Mise en variable de tout les plats
     $data = $_SESSION['currentMeals'];
 
@@ -200,9 +200,14 @@ function getData(){
 
     //Creation du contenu du tableau
     for($d=0; $d < count($data); $d++){
-        $skip = false;
 
+        //Si la date entre se trouve entre les dates de commande du plat
         if($data[$d]['meaStartDate'] < date("Y-m-d") && $data[$d]['meaDeadline'] > date("Y-m-d")){
+
+            //Permet de séparer chaque tableau entre eux sauf le premier
+            if($d != 0){
+                $strarray .= ',';
+            }
             $strarray .= '"'. $d . '":{';
             $strarray .= '"idMeal":"'. $data[$d]['idMeal'] .'",';
             $strarray .= '"meaName":"'. $data[$d]['meaName'] .'",';
@@ -211,20 +216,6 @@ function getData(){
             $strarray .= '"meaStartDate":"'. $data[$d]['meaStartDate'] .'",';
             $strarray .= '"meaDeadline":"'. $data[$d]['meaDeadline'] .'",';
             $strarray .= '"meaDisplay":"'. $data[$d]['meaDisplay'] .'"}';
-        }
-        else{
-            $skip = true;
-        }
-
-        //Met une virgul entre chaque tableau
-        if($d != count($data) && $skip == false){
-            $strarray .= ',';
-        }
-
-        //Permet de supprimer l'ancienne virgule, car elle est en trop
-        if($skip == true){
-            $strTemp = $strarray;
-            $strarray = substr($strTemp, 0, -1);
         }
     }
     //Fin du tableau
@@ -257,8 +248,10 @@ function getData(){
 
     //Permet d'ajouter un plat au dropdown
     function addOption(meal){
+
         //selectionne l'element suivant sont id
         option = document.querySelector('.selectedMeal');
+
         //Ajout le code HTML a l'element selectionner
         option.innerHTML += "<option value='" + meal['idMeal'] + "'>" + meal['meaName'] + "</option>";
     }
@@ -266,7 +259,6 @@ function getData(){
     //Supprime tout les choix et remet celui de base
     function suppAllOption() {
         div = document.querySelector('.selectedMeal');
-
         while (div.firstChild) {
             div.removeChild(div.firstChild);
         }
