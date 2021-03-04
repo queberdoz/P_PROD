@@ -50,7 +50,7 @@ Les parties du code concernant le choix de tables ou d'autres plats lors d'une c
 
 ## TODO
 Bugs connus :
-- des utilisateurs peuvent commander un plat puis le plat peut être changé sans qu'ils ne le sachent. de plus la vue admin récapitulatif ne comptera que le plat actuel. Plusieurs solutions :
+- :white_check_mark: des utilisateurs peuvent commander un plat puis le plat peut être changé sans qu'ils ne le sachent. de plus la vue admin récapitulatif ne comptera que le plat actuel. Plusieurs solutions :
   - :white_check_mark: t_meal : ajouter champ deadline, à compléter en vue admin lors de changements de plats, n'accepter commande pour le plat donné que si dans la deadline.
   - :x: non, car add champ dans t_meal -- vue admin : lorsque changements de menus, prévenir si réservation dans le futur avec ces plats avant d'effectuer le changement.
   - :x: vue utilisateur : restreindre commande à semaine courante (voir 2 semaines, peux être mieux et plus facile à implémenter). -- pas besoin, aucune limite mise
