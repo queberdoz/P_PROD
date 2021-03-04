@@ -50,14 +50,32 @@
 
     <div class="textAccueil <?php if ($_SESSION['adminRight']) { echo "textAccueil-admin"; } ?> mb-4 pb-4">
         <h1 class="text-center mb-3">Menus végétariens de la semaine</h1>
-        <div class="d-flex justify-content-around flex-wrap">
-            <div class="text-center my-1">
-                <p class="mb-0">Menu n°1</p>
-                <h3 class="py-0"><?php if (isset($currentMeals[0])) { echo $currentMeals[0]['meaName']; } ?></h3>
-            </div>
-            <div class="text-center my-1">
-                <p class="mb-0">Menu n°2</p>
-                <h3 class="py-0"><?php if (isset($currentMeals[1])) { echo $currentMeals[1]['meaName']; } ?></h3>
+        <div clase="container">
+            <div class="row justify-content-around">
+                <?php
+                $meals = $_SESSION['meals'];
+                $nbrMeal = count($meals);
+                
+                if($nbrMeal != 0){
+                    for($x=0; $x < $nbrMeal; $x++){
+                        if($x%2 == 0 && $x != 0){
+                            ?>
+                            </div>
+                            <div class="row justify-content-around">
+                            <?php
+                        }
+                        ?>
+                        <div class="text-center my-1">
+                            <p class="mb-0">Menu n°<?php echo($x + 1); ?></p>
+                            <h3 class="py-0"><?php echo($meals[$x]['meaName']);?></h3>
+                        </div>
+                        <?php
+                        }
+                }
+                else{
+                    echo("Aucun menu disponible cette semaine cette semaine");
+                }
+                ?>
             </div>
         </div>
     </div>

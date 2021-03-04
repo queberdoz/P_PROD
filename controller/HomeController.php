@@ -287,7 +287,23 @@ class HomeController extends Controller
         include_once 'model/Database.php';
         $db = new Database();
         
-        $currentMeals = $db->getCurrentMeals();
+        $allMeals = $db->getAllMeals();
+
+        $_SESSION['meals'] = array();
+
+        $nbrMeal = count($allMeals);
+        $dateNow = date("Y-m-d");
+        $lastDay = new DateTime("Sunday this week $dateNow");
+        $lastDay = date_format($lastDay, 'Y-m-d');
+        $firstDay = new DateTime("Monday this week $dateNow");
+        $firstDay = date_format($firstDay, 'Y-m-d');
+
+        for($x=0; $x < $nbrMeal; $x++){
+            //le plat doit être comprit dans la semaine actuel.
+            if($allMeals[$x]['meaStartDate'] < $lastDay && $allMeals[$x]['meaDeadline'] > $firstDay){
+                array_push($_SESSION['meals'], $allMeals[$x]);
+            }
+        }
 
         $view = file_get_contents('view/page/Accueil.php');
         ob_start();
