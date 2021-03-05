@@ -550,8 +550,76 @@ class HomeController extends Controller
 
         $currentDate = date('Y-m-d');
 
+        //DB requet qui récupère tous les plat commandé avec le nom des personnes
+        $allReservation = $database->allMealsReserved($currentDate);
+        //echo($currentDate ." ");
+        $nbrOfMeal = $database->getNumberofAllMeal($currentDate);
+
+        $_SESSION['allReservation'] = $allReservation;
+        $_SESSION['nbrOfMeal'] = $nbrOfMeal;
+
+        /*print_r($_SESSION['allReservation']);
+        echo("</br>");
+        print_r($_SESSION['nbrOfMeal']);*/
+
+
+        /*print_r($counter);
+        $nbrCount = count($counter);
+        $nbrPeople = count($data);
+        echo "</br>";
+        echo ($nbrPeople);
+        echo "</br>";
+        echo ($nbrCount);
+        echo "</br>";
+
+        $_SESSION['allMenu'] = $counter;
+        for($a=0; $a < $nbrCount; $a++){
+            $peopleCounter = 0;
+            echo("-1-");
+
+            for($b=0; $b < $nbrPeople; $b++){
+                echo($_SESSION['allMenu'][$a]['meaName'] ." == ". $data[$b]['meaName'] ."</br>");
+                //Pour les personnes ayant réserver pour 11h
+                if($_SESSION['allMenu'][$a]['meaName'] == $data[$b]['meaName'] && $_SESSION['allMenu'][$a]['reserved11'] != 0 && $data[$b]['resHour'] == 11){
+                    echo("-2-");
+                    $user = $data[$b]['useFirstName'] ." ". $data[$b]['useLastName'] ." (". $data[$b]['useEmail'] .")";
+                    echo($user ."</br>");
+                    array_push($_SESSION['people'][$a]['reserved11'][$peopleCounter], $user);
+                    //$_SESSION['people'][$a][$peopleCounter] += $data[$b]['useFirstName'] . $data[$b]['useLastName'] ."(". $data[$b]['useEmail'] .")";
+                    $peopleCounter++;
+                }
+                //Pour les personnes ayant réservé pour 12h
+                else if($_SESSION['allMenu'][$a]['meaName'] == $data[$b]['meaName'] && $_SESSION['allMenu'][$a]['reserved12'] != 0 && $data[$b]['resHour'] == 12){
+                    echo("-3-");
+                    $user = $data[$b]['useFirstName'] ." ". $data[$b]['useLastName'] ." (". $data[$b]['useEmail'] .")";
+                    echo($user ."</br>");
+                    array_push($_SESSION['people'][$a]['reserved12'][$peopleCounter], $user);
+                    //$_SESSION['people'][$a][$peopleCounter] += $data[$b]['useFirstName'] . $data[$b]['useLastName'] ."(". $data[$b]['useEmail'] .")";
+                    $peopleCounter++;
+                }
+            }
+        }
+
+        echo "</br>";
+        echo "------------------------------------------------------------------------------------------------------------------";
+        echo "</br>";
+        print_r($_SESSION['allMenu']);
+        echo "</br>";
+        print_r($_SESSION['people']);*/
+
+        // x = pour les menus -- y = pour les personnes
+        //Stockage $_SESSION['allMenu'][x]['meaName'] = nom du menu -- fait
+        //         $_SESSION['allMenu'][x]['reserved11'] = nombre de menu commandé a 11h --
+        //         $_SESSION['allMenu'][x]['reserved12'] = nombre de menu commandé a 12h --
+        //         $_SESSION['people'][x]['reserved11'][y] = toutes les personne qui ont commandé ce plat pour 11h --
+        //         $_SESSION['people'][x]['reserved12'][y] = toutes les personne qui ont commandé ce plat pour 12h --
+
+
+        //TODO : a supprimer !!!!
         $reservations = $database->getReservationsPerDayPerHourPerMeal($currentDate);
         $currentMeals = $database->getCurrentMeals();
+
+
 
         $view = file_get_contents('view/page/Recap.php');
 

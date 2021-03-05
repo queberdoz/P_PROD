@@ -70,7 +70,7 @@
                             <h3 class="py-0"><?php echo($meals[$x]['meaName']);?></h3>
                         </div>
                         <?php
-                        }
+                    }
                 }
                 else{
                     echo("Aucun menu disponible cette semaine cette semaine");

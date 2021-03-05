@@ -699,4 +699,36 @@ class Database extends Model
 
         return $result2;
     }
+
+    public function allMealsReserved($dateNow){
+        $result1 = $this->queryPrepareExecute(
+            "SELECT  t_reservation.resHour, t_meal.meaName, t_user.useUsername, t_user.useEmail, t_user.useFirstName, t_user.useLastName FROM t_reservation
+            LEFT JOIN t_user ON t_reservation.fkUser = t_user.idUser
+            LEFT JOIN t_meal ON t_reservation.fkMeal = t_meal.idMeal
+            WHERE resDate = :dateNow",
+            array(
+                1=> array(
+                    "marker" => "dateNow",
+                    "var" => $dateNow,
+                    "type" => PDO::PARAM_STR
+                )
+            )
+        );
+
+        $result2 = $this->formatData($result1);
+
+        return $result2;
+    }
+
+    public function getNumberofAllMeal($dateNow){
+        //Exécution simple car rien n'est entré par l'utilisateur.
+        $resultat1 = $this->querySimpleExecute("SELECT meaName, COUNT(CASE WHEN resHour = '11' THEN 1 END) as reserved11, COUNT(CASE WHEN resHour = '12' THEN 1 END) as reserved12 
+        FROM t_reservation 
+        LEFT JOIN t_meal ON t_reservation.fkMeal = t_meal.idMeal 
+        WHERE resDate = '$dateNow' GROUP BY meaName");
+
+        $resultat2 = $this->formatData($resultat1);
+
+        return $resultat2;
+    }
 }
