@@ -17,30 +17,37 @@
                     <div class="container">
                         <div class="row justify-content-around mb-3">
                         <?php
-                        for($a=0; $a < count($_SESSION['nbrOfMeal']); $a++){
-                            if($a%2 == 0 && $a != 0){
-                                ?>
-                                </div>
-                                <div class="row justify-content-around">
-                                <?php
-                            }
-                        ?>
-                            <div class="text-center my-1">
-                                <p class="mb-0">Menu n°<?= $a + 1 ?></p>
-                                <h3 class="py-0"><?= $_SESSION['nbrOfMeal'][$a]['meaName'] ?></h3>
-                                <h1 class="display-1">
-                                    <?= $_SESSION['nbrOfMeal'][$a]['reserved11'] ?>x
-                                </h1>
-                                <?php
-                                for($b=0; $b < count($_SESSION['allReservation']); $b++){
-                                    if($_SESSION['allReservation'][$b]['resHour'] == 11 && $_SESSION['allReservation'][$b]['meaName'] == $_SESSION['nbrOfMeal'][$a]['meaName']){
-                                        echo("<h7>". $_SESSION['allReservation'][$b]['useFirstName'] ." ". $_SESSION['allReservation'][$b]['useLastName'] ."</h7>");
-                                        echo("</br>");
-                                    }
+                        if(count($_SESSION['nbrOfMeal']) != 0){
+                            for($a=0; $a < count($_SESSION['nbrOfMeal']); $a++){
+                                if($a%2 == 0 && $a != 0){
+                                    ?>
+                                    </div>
+                                    <div class="row justify-content-around">
+                                    <?php
                                 }
-                                ?>
-                            </div>
-                        <?php
+                            ?>
+                                <div class="text-center my-1">
+                                    <p class="mb-0">Menu n°<?= $a + 1 ?></p>
+                                    <h3 class="py-0"><?= $_SESSION['nbrOfMeal'][$a]['meaName'] ?></h3>
+                                    <h1 class="display-1">
+                                        <?= $_SESSION['nbrOfMeal'][$a]['reserved11'] ?>x
+                                    </h1>
+                                    <?php
+                                    for($b=0; $b < count($_SESSION['allReservation']); $b++){
+                                        if($_SESSION['allReservation'][$b]['resHour'] == 11 && $_SESSION['allReservation'][$b]['meaName'] == $_SESSION['nbrOfMeal'][$a]['meaName']){
+                                            echo("<h7>". $_SESSION['allReservation'][$b]['useFirstName'] ." ". $_SESSION['allReservation'][$b]['useLastName'] ."</h7>");
+                                            echo("</br>");
+                                        }
+                                    }
+                                    ?>
+                                </div>
+                            <?php
+                            }
+                        }
+                        else{
+                            ?>
+                            <h3>Aucun plat n'a été commandé</h3>
+                            <?php
                         }
                         ?>
                         </div>
@@ -51,30 +58,37 @@
                     <div class="container">
                         <div class="row justify-content-around mb-3">
                         <?php
-                        for($a=0; $a < count($_SESSION['nbrOfMeal']); $a++){
-                            if($a%2 == 0 && $a != 0){
-                                ?>
-                                </div>
-                                <div class="row justify-content-around">
-                                <?php
-                            }
-                        ?>
-                            <div class="text-center my-1">
-                                <p class="mb-0">Menu n°<?= $a + 1 ?></p>
-                                <h3 class="py-0"><?= $_SESSION['nbrOfMeal'][$a]['meaName'] ?></h3>
-                                <h1 class="display-1">
-                                    <?= $_SESSION['nbrOfMeal'][$a]['reserved12'] ?>x
-                                </h1>
-                                <?php
-                                for($b=0; $b < count($_SESSION['allReservation']); $b++){
-                                    if($_SESSION['allReservation'][$b]['resHour'] == 12 && $_SESSION['allReservation'][$b]['meaName'] == $_SESSION['nbrOfMeal'][$a]['meaName']){
-                                        echo("<h7>". $_SESSION['allReservation'][$b]['useFirstName'] ." ". $_SESSION['allReservation'][$b]['useLastName'] ."</h7>");
-                                        echo("</br>");
-                                    }
+                        if(count($_SESSION['nbrOfMeal']) != 0){
+                            for($a=0; $a < count($_SESSION['nbrOfMeal']); $a++){
+                                if($a%2 == 0 && $a != 0){
+                                    ?>
+                                    </div>
+                                    <div class="row justify-content-around">
+                                    <?php
                                 }
-                                ?>
-                            </div>
-                        <?php
+                            ?>
+                                <div class="text-center my-1">
+                                    <p class="mb-0">Menu n°<?= $a + 1 ?></p>
+                                    <h3 class="py-0"><?= $_SESSION['nbrOfMeal'][$a]['meaName'] ?></h3>
+                                    <h1 class="display-1">
+                                        <?= $_SESSION['nbrOfMeal'][$a]['reserved12'] ?>x
+                                    </h1>
+                                    <?php
+                                    for($b=0; $b < count($_SESSION['allReservation']); $b++){
+                                        if($_SESSION['allReservation'][$b]['resHour'] == 12 && $_SESSION['allReservation'][$b]['meaName'] == $_SESSION['nbrOfMeal'][$a]['meaName']){
+                                            echo("<h7>". $_SESSION['allReservation'][$b]['useFirstName'] ." ". $_SESSION['allReservation'][$b]['useLastName'] ."</h7>");
+                                            echo("</br>");
+                                        }
+                                    }
+                                    ?>
+                                </div>
+                            <?php
+                            }
+                        }
+                        else{
+                            ?>
+                            <h3>Aucun plat n'a été commandé</h3>
+                            <?php
                         }
                         ?>
                         </div>
