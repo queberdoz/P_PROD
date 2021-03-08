@@ -30,12 +30,12 @@ Les parties du code concernant le choix de tables ou d'autres plats lors d'une c
 
 ### Simple Setup Uwamp
 1. téléchargez et installez uwamp https://www.uwamp.com/fr/?page=download version exe (ou en version zip, il faut alors l'extraire)
-2. clonez répertoire git https://github.com/GuggisbergSimon/P_PROD (bouton vert/Code puis download zip)
+2. clonez répertoire git https://github.com/queberdoz/P_PROD (bouton vert/Code puis download zip)
 3. mettre le dossier de projet dans le dossier www d'uwamp
 4. exécutez uwamp, sélectionnez la version de php : 7.0.3
 5. dans uwamp, sélectionner phpmyadmin
 6. connectez vous avec "root" et "root" comme usename/password
-7. importez une base de données, avec le fichier suivant : https://github.com/GuggisbergSimon/P_PROD/blob/main/src/database/bd_etmeal.sql
+7. importez une base de données, avec le fichier suivant : https://github.com/queberdoz/P_PROD/blob/main/src/database/bd_etmeal.sql
 8. Rendez vous sur le site internet en cliquant sur le bouton "navigateur www" puis le lien P_PROD, les étapes suivantes sont optionnelles, pour créer un autre compte administrateur
 9. Créez un utilisateur via connexion -> inscription
 10. Retournez sur la base de données mysql, se rendre dans t_user et modifiez un user existant avec droits supérieurs à 50, pour qu'il soit administrateur.
@@ -70,9 +70,9 @@ Fonctionnalités légères :
 - serveur : Mettre plus d'error_log pour mieux suivre erreurs serveur.
 
 Fonctionnalités complexes :
-- vue admin : générer récapitulatif détaillé pdf puis l'envoyer par mail aux responsables via un bouton.
+- :x: vue admin : générer récapitulatif détaillé pdf puis l'envoyer par mail aux responsables via un bouton -- juger pas très utile.
 - vue admin/user : ajouter image pour plats.
-- serveur : envoyer un email/jour récapitulatif (à minuit) pour les commandes du lendemain/surlendemain -- utilisation de script impossible sur un héberger web, à voir lors de l'hébergement.
+- serveur : envoyer un email/jour récapitulatif (à minuit) pour les commandes du lendemain/surlendemain -- peux être fait sur le serveur interne.
 - :x: sécurité : identifier personne via carte étudiant/~~eduvaud~~ (déterminer manière de vérifier) -- Trop compliquer, l'id trouvé sur la carte est propre à la carte et non à l'étudiant et la synchronisation avec un fichier sur sharepoint demande un accès spécial qui demanderai d'être sécuriser.
 - :white_check_mark: sécurité : vérifier le compte via email.
 
