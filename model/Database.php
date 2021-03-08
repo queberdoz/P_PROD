@@ -720,6 +720,7 @@ class Database extends Model
         return $result2;
     }
 
+    // Récupère le nom du plats ainsi que la quantité commandé pour les 2 périodes
     public function getNumberofAllMeal($dateNow){
         //Exécution simple car rien n'est entré par l'utilisateur.
         $resultat1 = $this->querySimpleExecute("SELECT meaName, COUNT(CASE WHEN resHour = '11' THEN 1 END) as reserved11, COUNT(CASE WHEN resHour = '12' THEN 1 END) as reserved12 

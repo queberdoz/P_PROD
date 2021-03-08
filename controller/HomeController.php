@@ -39,10 +39,12 @@ class HomeController extends Controller
         if (array_key_exists('action', $_GET)) {
             $action = $_GET['action'] . "Action"; // listAction
         } else {
+            //Si $_GET['action'] n'existe pas on le (re)définit
+            $_GET['action'] = "Accueil";
             $action = 'AccueilAction'; // listAction
         }
 
-        if (!array_key_exists('role', $_SESSION) || $_SESSION['role'] < 50) {
+        if ((!array_key_exists('role', $_SESSION) || $_SESSION['role'] < 50) && array_key_exists('action', $_GET)) {
             if ($_GET['action'] == "Option") {
                 $action = 'AccueilAction'; // listAction
                 $_GET['action'] = 'Accueil';
@@ -146,6 +148,12 @@ class HomeController extends Controller
                 if (!array_key_exists('username', $_POST) || $_POST['username'] == "") {
                     $registerErrors[] = "Veuillez entrez un nom d'utilisateur.";
                 }
+                else{
+                    //Vérification pour ne pas injecter de code, car il l'exécute lors de l'affichage
+                    if($this->verifCodeInput($_POST['username'])){
+                        $registerErrors[] = "Votre nom d'utilisateur ne doit pas contenir ces caractères : ". $GLOBALS['showPattern'];
+                    }
+                }
 
                 if (!array_key_exists('password', $_POST) || $_POST['password'] == "" || !array_key_exists('confPassword', $_POST) || $_POST['confPassword'] != $_POST['password']) {
                     $registerErrors[] = "Mots de passe incorrects, veuillez les entrer à nouveau.";
@@ -169,9 +177,21 @@ class HomeController extends Controller
                 if (!array_key_exists('firstName', $_POST) || $_POST['firstName'] == "") {
                     $registerErrors[] = "Veuillez remplir le champ Prénom.";
                 }
+                else{
+                    //Vérification pour ne pas injecter de code, car il l'exécute lors de l'affichage
+                    if($this->verifCodeInput($_POST['firstName'])){
+                        $registerErrors[] = "Votre prénom ne doit pas contenir ces caractères : ". $GLOBALS['showPattern'];
+                    }
+                }
 
                 if (!array_key_exists('lastName', $_POST) || $_POST['lastName'] == "") {
                     $registerErrors[] = "Veuillez remplir le champ Nom.";
+                }
+                else{
+                    //Vérification pour ne pas injecter de code, car il l'exécute lors de l'affichage
+                    if($this->verifCodeInput($_POST['lastName'])){
+                        $registerErrors[] = "Votre nom ne doit pas contenir ces caractères : ". $GLOBALS['showPattern'];
+                    }
                 }
 
                 if (!array_key_exists('username', $_POST) || ($database->userExistsAt(strtolower($_POST['username'])) >= 0)) {
@@ -179,17 +199,21 @@ class HomeController extends Controller
                 }
 
                 if (empty($registerErrors)) {
-                    $compte = $database->register($_POST['username'], $_POST['password'], $_POST['email'], $_POST['firstName'], $_POST['lastName'], 0);
+                    $username = htmlspecialchars($_POST['username']);
+                    $firstName = htmlspecialchars($_POST['firstName']);
+                    $lastName = htmlspecialchars($_POST['lastName']);
+
+                    $compte = $database->register($username, $_POST['password'], $_POST['email'], $firstName, $lastName, 0);
 
                     //Vérification que l'email ou le pseudo n'est pas duplique.
                     $error = $compte->errorInfo();
                     //print_r($compte->errorInfo());
                     if($error[1] == 1062){
                         if(strpos($error[2], "useEmail") !== false){
-                            $registerErrors = array("l'email existe déjà, veuillez le revérifier. Si c'est votre adresse mail vous pouvez contacter l'administrateur par mail au groupe \"ETML_RESTAURANT\" ou par téléphone au 021 316 77 89");
+                            $registerErrors[] = array("l'email existe déjà, veuillez le revérifier. Si c'est votre adresse mail vous pouvez contacter l'administrateur par mail au groupe \"ETML_RESTAURANT\" ou par téléphone au 021 316 77 89");
                         }
                         else if(strpos($error[2], "useUsername") !== false){
-                            $registerErrors = array("Le nom d'utilisateur existe déjà veuillez en entrer un autre");
+                            $registerErrors[] = array("Le nom d'utilisateur existe déjà veuillez en entrer un autre");
                         }
                     }
                     else{
@@ -421,18 +445,23 @@ class HomeController extends Controller
 
                     foreach ($meals as $meal) {
                         if (strtolower($meal['meaName']) == strtolower($menu) && $meal['idMeal'] != $_POST['mealID-'. $z] && ($meal['meaName'] != null || $meal['meaName'] == "-")) {
-                            //Si le champs meaDisplay est a 0, on le réactive
-                            if($meal['meaDisplay'] == 0){
-                                // on va réactiver un ancien plat qui a le même nom et supprimer la row dernièrement créer pour ne pas avoir de double
-                                $db->reactivateMeal($meal['idMeal']);
-                                $db->deleteMealById($_POST['mealID-'. $z]);
+                            if(!($this->verifCodeInput($meal['meaName']))){
+                                //Si le champs meaDisplay est a 0, on le réactive
+                                if($meal['meaDisplay'] == 0){
+                                    // on va réactiver un ancien plat qui a le même nom et supprimer la row dernièrement créer pour ne pas avoir de double
+                                    $db->reactivateMeal($meal['idMeal']);
+                                    $db->deleteMealById($_POST['mealID-'. $z]);
 
-                                $restorMeal = true;
+                                    $restorMeal = true;
+                                }
+                                else{
+                                    //On a trouvé ce que l'on voulait, c'est à dire un doublon.
+                                    $menuExists = true;
+                                    break;
+                                }
                             }
                             else{
-                                //On a trouvé ce que l'on voulait, c'est à dire un doublon.
-                                $menuExists = true;
-                                break;
+                                $_SESSION['menuErrors'][] = "Veillez ne pas entrez ces caractères dans le nom du plat : ". $GLOBALS['showPattern'];
                             }
                         }
                     }
@@ -717,10 +746,10 @@ class HomeController extends Controller
         //rand() génère un chiffre entre 0 et 7843976 puis md5() va le transformer en phrase de 32 caracteres
         $hash = md5(rand(0,7843976));
 
-        $mail = "&Mail=" . $mail;
+        $mailLink = "&Mail=" . $mail;
 
         //Creation du lien
-        $alllink = $actual_link . $hashLink . $hash . $mail;
+        $alllink = $actual_link . $hashLink . $hash . $mailLink;
 
         $date = date("Y-m-d H:i:s", strtotime("+1 days"));
 
@@ -762,5 +791,20 @@ class HomeController extends Controller
         $content = ob_get_clean();
 
         return $content;
+    }
+
+    private function verifCodeInput($inpute){
+        //Tous les caractères à exclure pour ne pas a avoir du code exécutable lors de l'affichage.
+        $pattern = '(<|>|"|;|/|!|_)';
+        //Permet d'afficher les caractères qui ne doivent pas être entré lors de l'affichage de l'erreur.
+        $GLOBALS['showPattern'] = "< > \" ; / ! _";
+
+        //Vérification de $inpute
+        if(preg_match($pattern, strtolower($inpute)) == true){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }
