@@ -65,7 +65,7 @@
                             <?php
                         }
                         ?>
-                        <div class="text-center my-1">
+                        <div class="col text-center my-1">
                             <p class="mb-0">Menu n°<?php echo($x + 1); ?></p>
                             <h3 class="py-0"><?php echo($meals[$x]['meaName']);?></h3>
                         </div>
