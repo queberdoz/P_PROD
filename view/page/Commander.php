@@ -56,7 +56,7 @@ if (!array_key_exists('username', $_SESSION)) {
                     <option value="12">12h10 - 12h50</option>
                 </select>
             </div>
-            <input class="btn btn-primary mt-4 mb-4" name="submitBtn" type="submit">
+            <input class="btn btn-primary mt-4 mb-4" name="submitBtn" type="submit" value="Commander">
         </div>
     </form>
     <?php
