@@ -713,6 +713,13 @@ class HomeController extends Controller
                 }
             }
         }
+
+        //Permet de 
+        if(isset($_GET['Delete'])){
+            $this->VerifieDeleteOrder($_GET['Delete']);
+            header('Location: index.php?controller=home&action=Commander');
+        }
+
         // END VALIDATION
         $_SESSION['currentMeals'] = $database->getCurrentMeals();
 

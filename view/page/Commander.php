@@ -137,11 +137,6 @@ if (!array_key_exists('username', $_SESSION)) {
 
 </div>
     <?php
-    //Permet de 
-    if(isset($_GET['Delete'])){
-        $controller->VerifieDeleteOrder($_GET['Delete']);
-        header('Location: index.php?controller=home&action=Commander');
-    }
 }
 
 
