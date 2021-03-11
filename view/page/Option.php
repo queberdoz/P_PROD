@@ -179,6 +179,7 @@ $week_end = date('d-m-Y', strtotime('+' . (6 - $day) . ' days'));
 </div>
 
 <script type="text/javascript">
+    // Permet d'ajouter supprMeal en $_GET et d'y définir sa valeur, pour le supprimer
     function supprMeal(clicked_id) {
         key = encodeURIComponent("supprMeal");
         value = encodeURIComponent(clicked_id);

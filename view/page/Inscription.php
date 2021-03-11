@@ -9,7 +9,7 @@
                 <div class="alert alert-success mt-5">
                     Vous êtes bien inscrits !
                     <ul class="mb-0">
-                        <li>Un mail de confirmation vous a été envoyé. Vous avez 24h pour cliquer sur le lien et confirmer votre adresse mail.</li>
+                        <li>Un mail de confirmation vous a été envoyé. Vous avez 24h pour cliquer sur le lien et confirmer votre adresse mail. ATTENTION: l'email peux se trouve dans les spams</li>
                         <li><a href="index.php?controller=home&action=Connexion" style="text-decoration: none;">Connectez-vous !</a></li>
                     </ul>
                 </div>

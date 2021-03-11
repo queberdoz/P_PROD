@@ -8,7 +8,7 @@
                 <div class="alert alert-success mt-5">
                     Email envoyé !
                     <ul class="mb-0">
-                        <li>Un mail de confirmation vous a été envoyé. Vous avez 24h pour cliquer sur le lien et confirmer votre adresse mail.</li>
+                        <li>Un mail de confirmation vous a été envoyé. Vous avez 24h pour cliquer sur le lien et confirmer votre adresse mail. ATTENTION: l'email peux se trouve dans les spams</li>
                     </ul>
                 </div>
         <?php
@@ -33,7 +33,6 @@
             <div class="col-sm-7 mt-2">
                 <input type="text" class="form-control" id="Email" aria-describedby="AideNomUser" name="email" value="<?php if (isset($_SESSION['allUserInfo']['useEmail'])) { echo htmlspecialchars($_SESSION['allUserInfo']['useEmail']); } ?>" disabled>
             </div>
-            <!-- <a class="col-sm-2 btn btn-primary" name="verifier" role="button">Vérifier</a> -->
             <div class="col-sm-3 mt-2">
                 <button type="submit" name="verifier" class="btn btn-primary col-sm-12">Vérifier</button>
             </div>

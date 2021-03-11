@@ -51,6 +51,7 @@ class HomeController extends Controller
             }
         }
 
+        // Redirige vers la page "Verif" pour le lien de vérification reçu par email.
         if(array_key_exists('Verif', $_GET) && array_key_exists('Mail', $_GET)){
             $action = 'VerifAction';
         }
@@ -235,6 +236,9 @@ class HomeController extends Controller
         return $content;
     }
 
+    /**
+     * Vérifie si le lien recu est le bon
+     */
     private function VerifAction()
     {
         //Pour l'utilisation de la BD
@@ -246,10 +250,12 @@ class HomeController extends Controller
                 $hash = $_GET['Verif'];
                 $mail = $_GET['Mail'];
 
+                //Recherche par rapport au lien et l'email recu en $_GET
                 $return = $database->verifLink($hash, $mail);
 
-                //print_r($return);
+                //Si la requête retourne 1 c'est que l'utilisateur a bien demandé de vérifier son addresse mail et que le lien est bon
                 if(count($return) == 1){
+                    //Vérification si le lien est expiré.
                     if($return[0]['verDeadline'] > date("Y-m-d H:i:s")){
                         ///Correct URL
                         $_SESSION['statusLink'] = 1;
@@ -274,11 +280,12 @@ class HomeController extends Controller
         //Delete all link expired
         $dateNow = date("Y-m-d H:i:s");
 
+        //TODO : a corriger car il ne fonctionne pas
+        // Suppression de tout les liens expirer
         $allId = $database->allExpiredLink($dateNow);
         foreach($allId as $id){
             $database->deleteLink($id['idUser']);
         }
-
 
         $view = file_get_contents('view/page/Verif.php');
         ob_start();
@@ -466,6 +473,7 @@ class HomeController extends Controller
                         }
                     }
 
+                    //Savoir si le plat est commandable ou non par l'utilisateur
                     if(isset($_POST['mealCurrentMeal-'. $z])){
 
                         if($_POST['mealCurrentMeal-'. $z] == "on"){
@@ -520,13 +528,17 @@ class HomeController extends Controller
             }
         }
 
+        //Permet de supprimer un plat si il est inscrit dans l'URL
         if(isset($_GET['supprMeal'])){
-            include_once 'model/Database.php';
-            $db = new Database();
-
-            $db->deleteMealById($_GET['supprMeal']);
-
-            header("Location: index.php?controller=home&action=Option$Scrollspy");
+            //Vérifie si la personne connecter est admin
+            if($_SESSION['role'] > 50){
+                include_once 'model/Database.php';
+                $db = new Database();
+    
+                $db->deleteMealById($_GET['supprMeal']);
+    
+                header("Location: index.php?controller=home&action=Option$Scrollspy");
+            }
         }
         // End validation
 
@@ -659,10 +671,12 @@ class HomeController extends Controller
                     }
                 }
 
+                // Si une heure est définie
                 if (!array_key_exists($sResHour, $_POST) || ($_POST[$sResHour] != 11 && $_POST[$sResHour] != 12)) {
                     $commandErrors[] = "Veuillez entrer une heure correcte.";
                 }
 
+                // Si un plat est sélectionner
                 if (!array_key_exists($sResMeal, $_POST)) {
                     $commandErrors[] = "Veuillez entrer un type de plat correct.";
                 } else {
@@ -672,6 +686,7 @@ class HomeController extends Controller
                     }
                 }
 
+                //Si l'utilisateur est connecté
                 if (!array_key_exists('username', $_SESSION)) {
                     $commandErrors[] = "Veuillez vous connectez pour ajouter une réservation.";
                 }
@@ -680,6 +695,7 @@ class HomeController extends Controller
                     $commandErrors[] = "Veuillez entrer un plat valide.";
                 }
 
+                //Si l'email est vérifié
                 if(array_key_exists('emailVerif', $_SESSION) && isset($_SESSION['emailVerif'])){
                     if($_SESSION['emailVerif'] == 0){
                         $commandErrors[] = "Votre adresse mail n'est pas valide";
@@ -742,6 +758,9 @@ class HomeController extends Controller
         return $content;
     }
 
+    /**
+     * Envoie un email de vérification
+     */
     private function sendMailVerifTo($idUser, $mail){
         include_once 'model/Database.php';
         $database = new Database();
@@ -769,6 +788,7 @@ class HomeController extends Controller
         include_once 'model/Database.php';
         $database = new Database();
 
+        //Permet de charger les information de l'utilisateur si il est connecté
         if (array_key_exists('username', $_SESSION) && isset($_SESSION['username'])){ 
             $return = $database->GetUserInfo($_SESSION['username']);
 
@@ -780,7 +800,7 @@ class HomeController extends Controller
             $view = file_get_contents('view/page/Accueil.php');
         }
         
-        
+        // Permet d'envoyer un email de vérification
         if(array_key_exists('verifier', $_POST) && isset($_POST['verifier'])){
             $idUser = $database->getIdUser($_SESSION['username']);
             $userInfo = $database->GetUserInfo($_SESSION['username']);

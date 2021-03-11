@@ -100,6 +100,7 @@
 </div>
 
 <script>
+    //Permet de générer un PDF
     $('#printRecap').click(function () {
         var HTML_Width = $("#menuRecap").width();
         var HTML_Height = $("#menuRecap").height();

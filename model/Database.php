@@ -167,8 +167,6 @@ class Database extends Model
      * @return void
      */
     // $_POST['mealName-'. $z], $_POST['mealCurrentMeal-'. $z], $_POST['mealStartDate-'. $z], $_POST['mealDeadline-'. $z]
-
-
     public function addNewMeal() {
         $this->queryPrepareExecute(
             "INSERT INTO t_meal (meaName, meaStartDate, meaDeadline) VALUES (:varNull, :stringDateStart, :stringDateDeadline)",
@@ -192,6 +190,7 @@ class Database extends Model
         );
     }
 
+    // Met à jour le plat suivant l'id renseigner
     public function updateMeal($mealId, $mealName, $mealCurrentMeal, $mealStartDate, $mealDeadline) {
         $this->queryPrepareExecute(
             "UPDATE t_meal SET meaName = :varMeaName, meaIsCurrentMeal = :varMealCurrentMeal, meaStartDate = :varMealStartDate, meaDeadline = :varMealDeadline WHERE t_meal.idMeal = :intMealId",
@@ -595,7 +594,9 @@ class Database extends Model
         }
     }
 
-    //Ajoute le hash avec comme liaison l'email et un délais de 24h pour activer 
+    /**
+     * Ajoute le hash avec comme liaison l'email et un délais de 24h pour activer 
+     */
     public function addNewHash($hash, $date, $idUser){
         $this->queryPrepareExecute(
             "INSERT INTO t_verification (verhash, verDeadline, fkUser) VALUES (:hash, :date, :idUser)",
@@ -619,7 +620,9 @@ class Database extends Model
         );
     }
 
-    //Verification du hash avec le mail.
+    /**
+     * Verification du hash avec le mail.
+     */
     public function verifLink($vHash, $Adresse){
         $result1 = $this->queryPrepareExecute(
             "SELECT * FROM t_verification LEFT JOIN t_user ON t_verification.fkUser = t_user.idUser WHERE verhash = :vHash AND useEmail = :Adresse",
@@ -642,7 +645,9 @@ class Database extends Model
         return $result2;
     }
 
-    //Supprime le lien car il a été utilisé.
+    /**
+     * Supprime le lien car il a été utilisé.
+     */
     public function deleteLink($idVerif){
         $this->queryPrepareExecute(
             "DELETE FROM t_verification WHERE t_verification.idVerification = :idVerif;",
@@ -656,7 +661,9 @@ class Database extends Model
         );
     }
 
-    //Validation de l'utilisateur
+    /**
+     * Validation de l'utilisateur
+     */
     public function userOk($adresse){
         $this->queryPrepareExecute(
             "UPDATE t_user SET useVerif = 1 WHERE t_user.useEmail = :Adresse",
@@ -670,7 +677,9 @@ class Database extends Model
         );
     }
 
-    //Selectionne tous les lien de validation expirer
+    /**
+     * Selectionne tous les lien de validation expirer
+     */
     public function allExpiredLink($dateNow){
         $return = $this->queryPrepareExecute(
             "SELECT idUser FROM t_verification WHERE verDeadline > :dateNow",
@@ -686,7 +695,9 @@ class Database extends Model
         return $return;
     }
 
-    //Permet l'update du role et si l'adresse mail est vérifier ou non
+    /**
+     * Permet l'update du role et si l'adresse mail est vérifier ou non
+     */
     public function GetUserInfo($username){
         $result1 = $this->queryPrepareExecute(
             "SELECT useUsername, useEmail, useFirstName, useLastName, useRole, useVerif FROM t_user WHERE useUsername = :username",
@@ -704,6 +715,9 @@ class Database extends Model
         return $result2;
     }
 
+    /**
+     * Obtient tous les plats commander
+     */
     public function allMealsReserved($dateNow){
         $result1 = $this->queryPrepareExecute(
             "SELECT  t_reservation.resHour, t_meal.meaName, t_user.useUsername, t_user.useEmail, t_user.useFirstName, t_user.useLastName FROM t_reservation
@@ -724,7 +738,9 @@ class Database extends Model
         return $result2;
     }
 
-    // Récupère le nom du plats ainsi que la quantité commandé pour les 2 périodes
+    /**
+     * Récupère le nom du plats ainsi que la quantité commandé pour les 2 périodes
+     */
     public function getNumberofAllMeal($dateNow){
         //Exécution simple car rien n'est entré par l'utilisateur.
         $resultat1 = $this->querySimpleExecute("SELECT meaName, COUNT(CASE WHEN resHour = '11' THEN 1 END) as reserved11, COUNT(CASE WHEN resHour = '12' THEN 1 END) as reserved12 

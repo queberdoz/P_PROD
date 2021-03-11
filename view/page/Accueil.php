@@ -58,6 +58,7 @@
                 
                 if($nbrMeal != 0){
                     for($x=0; $x < $nbrMeal; $x++){
+                        //Tout les 2 plats affiché par ligne, ajout d'une nouvelle ligne
                         if($x%2 == 0 && $x != 0){
                             ?>
                             </div>
@@ -73,7 +74,8 @@
                     }
                 }
                 else{
-                    echo("Aucun menu disponible cette semaine cette semaine");
+                    //Si il n'y a aucun plat commandé il affiche une phrase
+                    echo("Aucun menu disponible pour cette semaine");
                 }
                 ?>
             </div>

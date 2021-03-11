@@ -1,6 +1,7 @@
 <h1 class="mt-3 text-center" >Vérification</h1>
 
 <?php
+//Affiche le résultat si le lien est validé ou non.
 if($_SESSION['statusLink'] == 1){
 ?>
 <div class="alert alert-success" role="alert">
