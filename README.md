@@ -75,6 +75,7 @@ Fonctionnalités complexes :
 - serveur : envoyer un email/jour récapitulatif (à minuit) pour les commandes du lendemain/surlendemain -- peux être fait sur le serveur interne.
 - :x: sécurité : identifier personne via carte étudiant/~~eduvaud~~ (déterminer manière de vérifier) -- Trop compliquer, l'id trouvé sur la carte est propre à la carte et non à l'étudiant et la synchronisation avec un fichier sur sharepoint demande un accès spécial qui demanderai d'être sécuriser.
 - :white_check_mark: sécurité : vérifier le compte via email.
+- Changer l'envoie d'email, car il arrive dans les spam.
 
 Fonctionnalités Optionel :
 - Pouvoir modifier sa commande au lieux de supprimer et d'en refaire une.
