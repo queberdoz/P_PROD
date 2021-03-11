@@ -553,14 +553,15 @@ class Database extends Model
         include_once "configConfidential.ini.php";
         // Instantiation and passing `true` enables exceptions
         $mail = new PHPMailer(true);
-        $subject = "Mail de vérification";
+        $subject = "Confirmer votre adresse mail";
         $body = "Vous y êtes presque !! <br/>
                 Cliquer sur le lien ci-dessous pour vérifier votre compte <br/>
                 <a href='$hashLink'>" . $hashLink . "</a>";
 
         try {
             //Server settings
-            //$mail->SMTPDebug = SMTP::DEBUG_SERVER;                    // Enable verbose debug output
+            //$mail->SMTPDebug = SMTP::DEBUG_SERVER;                      // Enable verbose debug output
+            //$mail->SMTPDebug = 2;                                       // Enable verbose debug output
             $mail->isSMTP();                                            // Send using SMTP
             $mail->CharSet    = 'UTF-8';
             $mail->Host       = 'smtp.office365.com';                   // Set the SMTP server to send through
@@ -570,11 +571,13 @@ class Database extends Model
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
             $mail->Port       = 587;                                    // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
 
+            //Header
+            //addCustomHeader("");
 
             //Recipients
-            $mail->setFrom(MAIL_FROMADDRESS);
+            $mail->setFrom(MAIL_FROMADDRESS,'Cafétéria ETML');
 
-            $mail->addAddress($toAdresse);                              // Add a recipient
+            $mail->addAddress($toAdresse, $toAdresse);                              // Add a recipient
 
             // Content
             $mail->isHTML(true);                                        // Set email format to HTML
@@ -583,6 +586,7 @@ class Database extends Model
             $mail->AltBody = $body;
 
             $mail->send();
+            $mail->ClearAllRecipients();
             //echo 'Message has been sent';
         } catch (Exception $e) {
             //echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
