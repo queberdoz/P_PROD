@@ -800,6 +800,8 @@ class HomeController extends Controller
         return $content;
     }
 
+    //Permet de vérifier si du code se trouve dans la variable
+    //C'est pour éviter de l'injection de code dans la base de donnée.
     private function verifCodeInput($inpute){
         //Tous les caractères à exclure pour ne pas a avoir du code exécutable lors de l'affichage.
         $pattern = '(<|>|"|;|/|!|_)';
