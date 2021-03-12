@@ -35,7 +35,7 @@
                     }
                     else{
                         ?>
-                        <span data-toggle="tooltip" data-placement="bottom" title="Votre adresse mail n'est pas vérifié">
+                        <span data-toggle="tooltip" data-placement="bottom" title="Votre adresse mail n'est pas vérifié. Aller dans Mon compte pour vérifier votre adresse mail.">
                             <a class="nav-item nav-link disabled"><i class="fas fa-shopping-cart"></i> Commander</a>
                         </span>
                     <?php
