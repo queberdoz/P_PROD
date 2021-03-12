@@ -68,6 +68,7 @@ Fonctionnalités légères :
 - :x: t_reservation : ajouter champ "manger sur place/à l'emporter" -- Rien n'est encore prévu.
 - serveur : créer nouvelle adresse mail (sans "test" dans son nom).
 - serveur : Mettre plus d'error_log pour mieux suivre erreurs serveur.
+- vue user : Pouvoir modifier les champs Email, Nom, Prénom et son mot de passe
 
 Fonctionnalités complexes :
 - :x: vue admin : générer récapitulatif détaillé pdf puis l'envoyer par mail aux responsables via un bouton -- juger pas très utile.
@@ -75,7 +76,8 @@ Fonctionnalités complexes :
 - serveur : envoyer un email/jour récapitulatif (à minuit) pour les commandes du lendemain/surlendemain -- peux être fait sur le serveur interne.
 - :x: sécurité : identifier personne via carte étudiant/~~eduvaud~~ (déterminer manière de vérifier) -- Trop compliquer, l'id trouvé sur la carte est propre à la carte et non à l'étudiant et la synchronisation avec un fichier sur sharepoint demande un accès spécial qui demanderai d'être sécuriser.
 - :white_check_mark: sécurité : vérifier le compte via email.
-- Changer l'envoie d'email, car il arrive dans les spam.
+- Vérifier que l'email envoyer ne finisse pas dans les spam.
+- Pouvoir changer son mot de passe si on l'a oublié (envoie par email).
 
 Fonctionnalités Optionel :
 - Pouvoir modifier sa commande au lieux de supprimer et d'en refaire une.

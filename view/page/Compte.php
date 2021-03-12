@@ -16,6 +16,23 @@
                 $success = null;
             }
         }
+
+        if (array_key_exists('Errors', $_SESSION)) {
+            if (count($_SESSION['Errors']) > 0) {
+                ?>
+                <div class="alert alert-danger mt-5">
+                    Oups ... Nous avons rencontré quelques erreurs :<br>
+                    <ul class="mb-0">
+                        <?php
+                            foreach($_SESSION['Errors'] as $error) {
+                                echo "<li>$error</li>";
+                            }
+                        ?>
+                    </ul>
+                </div>
+                <?php
+            }
+        }
     ?>
     <form action="#" class="my-5" method="post">
         <div class="form-group row">

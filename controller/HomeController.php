@@ -788,6 +788,9 @@ class HomeController extends Controller
         include_once 'model/Database.php';
         $database = new Database();
 
+        $_SESSION['success'] = null;
+        $_SESSION['Errors'] = null;
+
         //Permet de charger les information de l'utilisateur si il est connecté
         if (array_key_exists('username', $_SESSION) && isset($_SESSION['username'])){ 
             $return = $database->GetUserInfo($_SESSION['username']);
@@ -807,11 +810,19 @@ class HomeController extends Controller
 
             $mail = $userInfo[0]['useEmail'];
 
-            //Envoie de l'email de vérification
-            $this->sendMailVerifTo($idUser, $mail);
+            //Vérifie si l'email envoyer contient @eduvaud.ch ou @vd.ch
+            if(strpos(strtolower($mail), "@eduvaud.ch") !== false || strpos(strtolower($mail), "@vd.ch") !== false){
+                //Envoie de l'email de vérification
+                $this->sendMailVerifTo($idUser, $mail);
 
-            $_SESSION['success'] = true;
+                $_SESSION['success'] = true;
+            }
+            else{
+                $_SESSION['Errors'][] = "l'email de ce compte n'est pas @eduvaud.ch ou @vd.ch. Veillez recréer un compte afin de pouvoir commandé un plat.";
+            }
         }
+
+        unset($_POST['verifier']);
 
         ob_start();
         eval('?>' . $view);
