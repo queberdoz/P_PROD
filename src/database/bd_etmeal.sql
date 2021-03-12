@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  localhost
--- Généré le :  Ven 05 Mars 2021 à 07:35
+-- Généré le :  Ven 12 Mars 2021 à 08:03
 -- Version du serveur :  5.7.11
 -- Version de PHP :  7.0.3
 
@@ -31,9 +31,10 @@ CREATE TABLE `t_meal` (
   `meaName` varchar(50) DEFAULT NULL,
   `meaPicturePath` varchar(50) DEFAULT NULL,
   `meaIsCurrentMeal` tinyint(1) DEFAULT '0',
-  `meaStartDate` date NOT NULL,
-  `meaDeadline` date NOT NULL,
-  `meaDisplay` int(11) NOT NULL DEFAULT '1'
+  `meaStartDate` date NOT NULL DEFAULT '2021-03-11',
+  `meaDeadline` date NOT NULL DEFAULT '2021-03-11',
+  `meaDisplay` int(11) NOT NULL DEFAULT '1',
+  `meaCreationDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -48,7 +49,8 @@ CREATE TABLE `t_reservation` (
   `resHour` tinyint(1) NOT NULL,
   `fkMeal` int(11) NOT NULL,
   `resTable` tinyint(1) NOT NULL,
-  `fkUser` int(11) NOT NULL
+  `fkUser` int(11) NOT NULL,
+  `resCreationDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -65,7 +67,8 @@ CREATE TABLE `t_user` (
   `useLastName` varchar(64) NOT NULL,
   `usePassword` varchar(200) NOT NULL,
   `useRole` tinyint(1) NOT NULL,
-  `useVerif` tinyint(1) NOT NULL DEFAULT '0'
+  `useVerif` tinyint(1) NOT NULL DEFAULT '0',
+  `useCreationDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -78,7 +81,8 @@ CREATE TABLE `t_verification` (
   `idVerification` int(11) NOT NULL,
   `verhash` text NOT NULL,
   `verDeadline` datetime(6) NOT NULL,
-  `fkUser` int(11) NOT NULL
+  `fkUser` int(11) NOT NULL,
+  `verCreationDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -123,22 +127,22 @@ ALTER TABLE `t_verification`
 -- AUTO_INCREMENT pour la table `t_meal`
 --
 ALTER TABLE `t_meal`
-  MODIFY `idMeal` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `idMeal` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 --
 -- AUTO_INCREMENT pour la table `t_reservation`
 --
 ALTER TABLE `t_reservation`
-  MODIFY `idReservation` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `idReservation` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 --
 -- AUTO_INCREMENT pour la table `t_user`
 --
 ALTER TABLE `t_user`
-  MODIFY `idUser` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+  MODIFY `idUser` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
 --
 -- AUTO_INCREMENT pour la table `t_verification`
 --
 ALTER TABLE `t_verification`
-  MODIFY `idVerification` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `idVerification` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
 --
 -- Contraintes pour les tables exportées
 --
