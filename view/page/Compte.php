@@ -8,7 +8,7 @@
                 <div class="alert alert-success mt-5">
                     Email envoyé !
                     <ul class="mb-0">
-                        <li>Un mail de confirmation vous a été envoyé. Vous avez 24h pour cliquer sur le lien et confirmer votre adresse mail. ATTENTION: l'email peux se trouve dans les spams</li>
+                        <li>Un mail de confirmation vous a été envoyé. Vous avez 24h pour cliquer sur le lien et confirmer votre adresse mail. ATTENTION: l'email peux se trouver dans les spams</li>
                         <li>Si l'email n'est pas le bon veillez recréer un compte avec la bonne adresse mail.</li>
                     </ul>
                 </div>

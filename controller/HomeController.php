@@ -137,7 +137,7 @@ class HomeController extends Controller
     {
         $view = file_get_contents('view/page/Inscription.php');
 
-        $registerErrors = array();
+        $_SESSION['registerErrors'] = array();
 
         if (array_key_exists('submitBtn', $_POST)) {
             if (isset($_POST['submitBtn'])) {
@@ -147,59 +147,59 @@ class HomeController extends Controller
                 $database = new Database();
 
                 if (!array_key_exists('username', $_POST) || $_POST['username'] == "") {
-                    $registerErrors[] = "Veuillez entrez un nom d'utilisateur.";
+                    $_SESSION['registerErrors'][] = "Veuillez entrez un nom d'utilisateur.";
                 }
                 else{
                     //Vérification pour ne pas injecter de code, car il l'exécute lors de l'affichage
                     if($this->verifCodeInput($_POST['username'])){
-                        $registerErrors[] = "Votre nom d'utilisateur ne doit pas contenir ces caractères : ". $GLOBALS['showPattern'];
+                        $_SESSION['registerErrors'][] = "Votre nom d'utilisateur ne doit pas contenir ces caractères : ". $GLOBALS['showPattern'];
                     }
                 }
 
                 if (!array_key_exists('password', $_POST) || $_POST['password'] == "" || !array_key_exists('confPassword', $_POST) || $_POST['confPassword'] != $_POST['password']) {
-                    $registerErrors[] = "Mots de passe incorrects, veuillez les entrer à nouveau.";
+                    $_SESSION['registerErrors'][] = "Mots de passe incorrects, veuillez les entrer à nouveau.";
                 }
 
                 if (!array_key_exists('email', $_POST) || $_POST['email'] == "") {
-                    $registerErrors[] = "Veuillez remplir le champ Email.";
+                    $_SESSION['registerErrors'][] = "Veuillez remplir le champ Email.";
                 } else {
                     if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-                        $registerErrors[] = "Veuillez renseigner un mail valide.";
+                        $_SESSION['registerErrors'][] = "Veuillez renseigner un mail valide.";
                     }
                     else{
                         //Restriction pour l'inscription au email @eduvaud.ch et @vd.ch
                         if(!(strpos(strtolower($_POST['email']), "@eduvaud.ch") !== false || strpos(strtolower($_POST['email']), "@vd.ch") !== false)) {
-                            $registerErrors[] = "Veuillez inscrire une adresse @eduvaud.ch ou @vd.ch.";
+                            $_SESSION['registerErrors'][] = "Veuillez inscrire une adresse @eduvaud.ch ou @vd.ch.";
                         }
                     }
                 }
 
 
                 if (!array_key_exists('firstName', $_POST) || $_POST['firstName'] == "") {
-                    $registerErrors[] = "Veuillez remplir le champ Prénom.";
+                    $_SESSION['registerErrors'][] = "Veuillez remplir le champ Prénom.";
                 }
                 else{
                     //Vérification pour ne pas injecter de code, car il l'exécute lors de l'affichage
                     if($this->verifCodeInput($_POST['firstName'])){
-                        $registerErrors[] = "Votre prénom ne doit pas contenir ces caractères : ". $GLOBALS['showPattern'];
+                        $_SESSION['registerErrors'][] = "Votre prénom ne doit pas contenir ces caractères : ". $GLOBALS['showPattern'];
                     }
                 }
 
                 if (!array_key_exists('lastName', $_POST) || $_POST['lastName'] == "") {
-                    $registerErrors[] = "Veuillez remplir le champ Nom.";
+                    $_SESSION['registerErrors'][] = "Veuillez remplir le champ Nom.";
                 }
                 else{
                     //Vérification pour ne pas injecter de code, car il l'exécute lors de l'affichage
                     if($this->verifCodeInput($_POST['lastName'])){
-                        $registerErrors[] = "Votre nom ne doit pas contenir ces caractères : ". $GLOBALS['showPattern'];
+                        $_SESSION['registerErrors'][] = "Votre nom ne doit pas contenir ces caractères : ". $GLOBALS['showPattern'];
                     }
                 }
 
                 if (!array_key_exists('username', $_POST) || ($database->userExistsAt(strtolower($_POST['username'])) >= 0)) {
-                    $registerErrors[] = "Nom d'utilisateur déjà présent, veuillez en sélectionner un autre.";
+                    $_SESSION['registerErrors'][] = "Nom d'utilisateur déjà présent, veuillez en sélectionner un autre.";
                 }
 
-                if (empty($registerErrors)) {
+                if (empty($_SESSION['registerErrors'])) {
                     $username = htmlspecialchars($_POST['username']);
                     $firstName = htmlspecialchars($_POST['firstName']);
                     $lastName = htmlspecialchars($_POST['lastName']);
@@ -211,10 +211,10 @@ class HomeController extends Controller
                     //print_r($compte->errorInfo());
                     if($error[1] == 1062){
                         if(strpos($error[2], "useEmail") !== false){
-                            $registerErrors[] = array("l'email existe déjà, veuillez le revérifier. Si c'est votre adresse mail vous pouvez contacter l'administrateur par mail au groupe \"ETML_RESTAURANT\" ou par téléphone au 021 316 77 89");
+                            $_SESSION['registerErrors'][] = "l'email existe déjà, veuillez le revérifier. Si c'est votre adresse mail vous pouvez contacter l'administrateur par mail au groupe \"ETML_RESTAURANT\" ou par téléphone au 021 316 77 89";
                         }
                         else if(strpos($error[2], "useUsername") !== false){
-                            $registerErrors[] = array("Le nom d'utilisateur existe déjà veuillez en entrer un autre");
+                            $_SESSION['registerErrors'][] = "Le nom d'utilisateur existe déjà veuillez en entrer un autre";
                         }
                     }
                     else{

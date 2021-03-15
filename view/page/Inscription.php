@@ -18,20 +18,20 @@
             }
         }
 
-        if (isset($registerErrors)) {
-            if (count($registerErrors) > 0) {
-        ?>
+        if (isset($_SESSION['registerErrors'])) {
+            if (count($_SESSION['registerErrors']) > 0) {
+                ?>
                 <div class="alert alert-danger mt-5">
                     Oups ... Nous avons rencontré quelques erreurs :<br>
                     <ul class="mb-0">
-        <?php
-                    foreach ($registerErrors as $error) {
+                    <?php
+                    foreach ($_SESSION['registerErrors'] as $error) {
                         echo "<li>$error</li>";
                     }
-        ?>
+                    ?>
                     </ul>
                 </div>
-        <?php
+                <?php
             }
         }
 
