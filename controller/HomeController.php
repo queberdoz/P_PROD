@@ -147,7 +147,7 @@ class HomeController extends Controller
                 $database = new Database();
 
                 if (!array_key_exists('username', $_POST) || $_POST['username'] == "") {
-                    $_SESSION['registerErrors'][] = "Veuillez entrez un nom d'utilisateur.";
+                    $_SESSION['registerErrors'][] = "Veuillez entrer un nom d'utilisateur.";
                 }
                 else{
                     //Vérification pour ne pas injecter de code, car il l'exécute lors de l'affichage
@@ -468,7 +468,7 @@ class HomeController extends Controller
                                 }
                             }
                             else{
-                                $_SESSION['menuErrors'][] = "Veillez ne pas entrez ces caractères dans le nom du plat : ". $GLOBALS['showPattern'];
+                                $_SESSION['menuErrors'][] = "Veillez ne pas entrer ces caractères dans le nom du plat : ". $GLOBALS['showPattern'];
                             }
                         }
                     }
@@ -490,7 +490,7 @@ class HomeController extends Controller
 
                     //message d'erreur car le plat existe déjà dans la DB.
                     if ($menuExists) {
-                        $_SESSION['menuErrors'][] = "Le plat (". $menu .") exist déjà, veillez saisir un autre plat pour le Menu N°". ($z+1);
+                        $_SESSION['menuErrors'][] = "Le plat (". $menu .") existe déjà, veuillez saisir un autre plat pour le Menu N°". ($z+1);
                     }
                     elseif($_POST['mealStartDate-'. $z] > $_POST['mealDeadline-'. $z]){
                         $_SESSION['menuErrors'][] = "La date du Menu N°". ($z+1) ." (". $menu .") n'est pas correcte. La date de début doit être avant la date de fin";
@@ -509,7 +509,7 @@ class HomeController extends Controller
 
                     //Autre message
                     if($restorMeal){
-                        $_SESSION['menuInfo'][] = "le menu N° ". ($z+1) ." (". $menu .") existait déjà, mais avait été supprimer. Le plat est maintenant réactivé";
+                        $_SESSION['menuInfo'][] = "Le menu N° ". ($z+1) ." (". $menu .") existait déjà, mais avait été supprimé. Le plat est maintenant réactivé";
                     }
                 }
                 // User feedback
@@ -688,7 +688,7 @@ class HomeController extends Controller
 
                 //Si l'utilisateur est connecté
                 if (!array_key_exists('username', $_SESSION)) {
-                    $commandErrors[] = "Veuillez vous connectez pour ajouter une réservation.";
+                    $commandErrors[] = "Veuillez vous connecter pour ajouter une réservation.";
                 }
 
                 if (!array_key_exists('resMeal', $_POST) || $_POST['resMeal'] == 0) {
@@ -709,7 +709,7 @@ class HomeController extends Controller
                 $result=$database->readReservationUserDate($_SESSION['username'], $_POST[$sResDate]);
 
                 if(count($result) == $maxorderperday){
-                    $commandErrors[] = "Vous avez déjà réserver " . $maxorderperday . " fois pour cette date";
+                    $commandErrors[] = "Vous avez déjà réservé " . $maxorderperday . " fois pour cette date";
                 }
 
                 if (count($commandErrors) == 0) {

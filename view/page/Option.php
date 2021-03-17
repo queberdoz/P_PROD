@@ -147,14 +147,13 @@ $week_end = date('d-m-Y', strtotime('+' . (6 - $day) . ' days'));
                                 </div>
                                 <div class='col-lg-*'>
                                     <!-- Custom switch -->
-                                    <!-- waiting : data-toggle='tooltip' data-placement='top' title='Si la case est cochée, le plat sera commandable entre les dates indiquée' -->
                                     <p class='custom-control custom-switch custom-switch-lg'>
                                         <input class='checkbox custom-control-input custom-control-input-success' name='mealCurrentMeal-". $x ."' id='customSwitch". $x ."' type='checkbox' ". $check .">
                                         <label class='custom-control-label font-italic' for='customSwitch". $x ."'>Plat disponible</label>
                                     </p>
                                 </div>
                                 <div class='col-lg-*'>
-                                    <span class='d-inline-block' tabindex='0' data-toggle='tooltip' data-placement='top' title='Si la case est cochée, le plat sera commandable entre les dates indiquée'>
+                                    <span class='d-inline-block' tabindex='0' data-toggle='tooltip' data-placement='top' title='Si la case est cochée, le plat sera commandable entre les dates indiquées'>
                                             <button class='btn btn-primary btn-sm' style='pointer-events: none;' type='button' disabled>?</button>
                                         </span>
                                 </div>

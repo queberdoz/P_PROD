@@ -43,13 +43,13 @@ if (!array_key_exists('username', $_SESSION)) {
                 <input onchange="dateChange(this.value)" class="form-control" type="date" name="resDate" id="dateOrder" min="<?php echo(date("Y-m-d", strtotime("+1 days"))); ?>">
             </div>
             <div class="form-group">
-                <label for="selectMeal">Plat choisi : </label>
+                <label for="selectMeal">Plat choisit : </label>
                 <select class="form-control selectedMeal" id="selectMeal" name="resMeal">
                     <option disabled selected>----- Sélection du plat -----</option>
                 </select>
             </div>
             <div class="form-group">
-                <label for="selectHour">Heure choisi : </label>
+                <label for="selectHour">Heure choisit : </label>
                 <select class="form-control selectedMea2" id="selectHour" name="resHour">
                     <option disabled selected>----- Sélection de l'heure -----</option>
                     <option value="11">11h20 - 12h00</option>
@@ -66,7 +66,7 @@ if (!array_key_exists('username', $_SESSION)) {
 
     <!-- tableau de plats commandé -->
     <div class="container">
-        <h3>Plats commandé</h3>
+        <h3>Plat commandé</h3>
         <div class="ligne"></div>
         <?php
             if(count($result) != 0){

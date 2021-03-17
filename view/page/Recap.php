@@ -4,7 +4,7 @@
 <div class="container">
     <div class="my-4">
         <div class="text-center">
-            <button id="printRecap" type="button" class="btn btn-primary btn-lg"><i class="fas fa-download"></i> Télécharger le récapitulatif</button>
+            <button id="printRecap" type="button" class="btn btn-primary btn-lg"><i class="fas fa-download"></i>Télécharger le récapitulatif</button>
         </div>
         <div id="menuRecap" style="padding-bottom: 50;">
             <div class="p-5">

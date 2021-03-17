@@ -8,8 +8,8 @@
                 <div class="alert alert-success mt-5">
                     Email envoyé !
                     <ul class="mb-0">
-                        <li>Un mail de confirmation vous a été envoyé. Vous avez 24h pour cliquer sur le lien et confirmer votre adresse mail. ATTENTION: l'email peux se trouver dans les spams</li>
-                        <li>Si l'email n'est pas le bon veillez recréer un compte avec la bonne adresse mail.</li>
+                        <li>Un mail de confirmation vous a été envoyé. Vous avez 24h pour cliquer sur le lien et confirmer votre adresse mail. ATTENTION: l'email peut se trouver dans les spams</li>
+                        <li>Si l'email n'est pas le bon veuillez recréer un compte avec la bonne adresse mail.</li>
                     </ul>
                 </div>
         <?php
@@ -54,7 +54,7 @@
             <div class="col-sm-3 mt-2">
                 <button type="submit" name="verifier" class="btn btn-primary col-sm-12">Vérifier</button>
             </div>
-            <small id="AideNomUser" class="form-text text-muted col-sm-12">Vous n'avez pas vérifié votre adresse mail. Cliquez sur le bouton ci-dessus afin de reçevoir l'email de confirmation. Si vous l'avez déjà fait, recharger la page afin de faire disparaitre ce message.</small>
+            <small id="AideNomUser" class="form-text text-muted col-sm-12">Vous n'avez pas vérifié votre adresse mail. Cliquez sur le bouton ci-dessus afin de recevoir l'email de confirmation. Si vous l'avez déjà fait, recharger la page afin de faire disparaitre ce message.</small>
 
             <?php
             }

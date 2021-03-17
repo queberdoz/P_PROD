@@ -554,7 +554,7 @@ class Database extends Model
         $mail = new PHPMailer(true);
         $subject = "Confirmer votre adresse mail";
         $body = "Vous y êtes presque !! <br/>
-                Cliquer sur le lien ci-dessous pour vérifier votre compte <br/>
+                Cliqué sur le lien ci-dessous pour vérifier votre compte <br/>
                 <a href='$hashLink'>" . $hashLink . "</a>";
 
         try {
