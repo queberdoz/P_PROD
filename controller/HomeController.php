@@ -331,8 +331,10 @@ class HomeController extends Controller
 
         for($x=0; $x < $nbrMeal; $x++){
             //le plat doit être comprit dans la semaine actuel.
-            if($allMeals[$x]['meaStartDate'] < $lastDay && $allMeals[$x]['meaDeadline'] > $firstDay){
-                array_push($_SESSION['meals'], $allMeals[$x]);
+            if($allMeals[$x]['meaStartDate'] <= $lastDay && $allMeals[$x]['meaDeadline'] >= $firstDay){
+                if($allMeals[$x]['meaIsCurrentMeal'] == 1 && $allMeals[$x]['meaDisplay'] == 1){
+                    array_push($_SESSION['meals'], $allMeals[$x]);
+                }
             }
         }
 
