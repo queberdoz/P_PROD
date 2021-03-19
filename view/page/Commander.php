@@ -197,7 +197,7 @@ function getData(){
     for($d=0; $d < count($data); $d++){
 
         //Si la date entre se trouve entre les dates de commande du plat
-        if($data[$d]['meaStartDate'] < date("Y-m-d") && $data[$d]['meaDeadline'] > date("Y-m-d")){
+        if($data[$d]['meaStartDate'] <= date("Y-m-d") && $data[$d]['meaDeadline'] >= date("Y-m-d")){
 
             //Permet de séparer chaque tableau entre eux sauf le premier
             if($d != 0){
@@ -235,7 +235,7 @@ function getData(){
 
         //Ajout le(s) plat(s) disponible à la date sélectionné
         for(var meal in allmeals){
-            if(dateSelected > allmeals[meal]['meaStartDate'] && dateSelected < allmeals[meal]['meaDeadline']){
+            if(dateSelected >= allmeals[meal]['meaStartDate'] && dateSelected <= allmeals[meal]['meaDeadline']){
                 addOption(allmeals[meal]);
             }
         }
