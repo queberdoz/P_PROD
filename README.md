@@ -35,7 +35,7 @@ Les parties du code concernant le choix de tables ou d'autres plats lors d'une c
 4. exécutez uwamp, sélectionnez la version de php : 7.0.3
 5. dans uwamp, sélectionner phpmyadmin
 6. connectez vous avec "root" et "root" comme usename/password
-7. importez une base de données, avec le fichier suivant : https://github.com/queberdoz/P_PROD/blob/main/src/database/bd_etmeal.sql
+7. importez une base de données, avec le fichier suivant : https://github.com/queberdoz/P_PROD/blob/qbz/src/database/bd_etmeal.sql 
 8. Rendez vous sur le site internet en cliquant sur le bouton "navigateur www" puis le lien P_PROD, les étapes suivantes sont optionnelles, pour créer un autre compte administrateur
 9. Créez un utilisateur via connexion -> inscription
 10. Retournez sur la base de données mysql, se rendre dans t_user et modifiez un user existant avec droits supérieurs à 50, pour qu'il soit administrateur.
